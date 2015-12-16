@@ -5,6 +5,10 @@
 
     <string name="title.activity.main">Cloudier</string>
     <string name="title.activity.notifications">Notifications</string>
+    <string name="title.activity.friends">Friends</string>
+
+    <string name="title.tab.followers">Followers</string>
+    <string name="title.tab.following">Following</string>
 
     <string name="title.action.notifications">Notifications</string>
     <string name="title.action.friends">Friends</string>

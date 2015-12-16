@@ -96,6 +96,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_friends) {
+            startActivity(new Intent(this, FriendsActivity.class));
+            return true;
+        }
+
         if (id == R.id.action_settings) {
             return true;
         }
