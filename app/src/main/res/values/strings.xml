@@ -2,8 +2,9 @@
 <resources>
 
     <string name="app_name">Cloudier</string>
-    
+
     <string name="title.activity.main">Cloudier</string>
+    <string name="title.activity.notifications">Notifications</string>
 
     <string name="title.action.notifications">Notifications</string>
     <string name="title.action.friends">Friends</string>
