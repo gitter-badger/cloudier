@@ -1,4 +1,4 @@
-package net.kyouko.cloudier;
+package net.kyouko.cloudier.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import net.kyouko.cloudier.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
