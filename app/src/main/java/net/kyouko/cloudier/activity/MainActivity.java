@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         initToolbar();
         initSrl();
-        initRecyclerView();
+        //initRecyclerView();
         initFab();
     }
 

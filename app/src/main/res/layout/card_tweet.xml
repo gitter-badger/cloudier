@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    style="@style/TweetCard"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="@dimen/radius_card"
+    app:cardElevation="@dimen/elevation_card_normal">
+
+    <LinearLayout
+        style="@style/TweetCard_Container">
+
+        <!-- Header -->
+        <RelativeLayout style="@style/TweetCard_Header">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/image_avatar"
+                style="@style/TweetCard_Header_Avatar"
+                app:placeholderImage="@android:color/darker_gray"
+                app:roundAsCircle="true"/>
+
+            <TextView
+                android:id="@+id/text_nick_name"
+                style="@style/TweetCard_Header_NickName"
+                android:layout_toEndOf="@id/image_avatar"
+                android:layout_toRightOf="@id/image_avatar"
+                tools:text="Title"/>
+
+            <TextView
+                android:id="@+id/text_username"
+                style="@style/TweetCard_Header_Username"
+                android:layout_below="@id/text_nick_name"
+                android:layout_toEndOf="@id/image_avatar"
+                android:layout_toRightOf="@id/image_avatar"
+                tools:text="Subhead"/>
+
+        </RelativeLayout>
+
+        <!-- Image(s) -->
+        <!-- TODO: Edit for multiple images. -->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_image"
+            style="@style/TweetCard_Image"
+            app:placeholderImage="@android:color/darker_gray"
+            app:viewAspectRatio="1.78"/>
+
+        <!-- Content -->
+        <TextView
+            android:id="@+id/text_content"
+            style="@style/TweetCard_Content"
+            tools:text="Greyhound divisively hello coldly wonderfully marginally far upon excluding."/>
+
+        <!-- Actions -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_small">
+
+            <Button
+                android:id="@+id/button_retweet"
+                style="@style/TweetCard_Actions_Button_Retweet"
+                android:contentDescription="@string/description.button.retweet"
+                tools:text="14"/>
+
+            <Button
+                android:id="@+id/button_comment"
+                style="@style/TweetCard_Actions_Button_Comment"
+                android:contentDescription="@string/description.button.comment"
+                tools:text="5"/>
+
+            <CheckBox
+                android:id="@+id/button_favorite"
+                style="@style/TweetCard_Actions_Button_Favorite"
+                android:contentDescription="@string/description.button.favorite"/>
+
+            <Button
+                android:id="@+id/button_menu"
+                style="@style/TweetCard_Actions_Button_Menu"
+                android:contentDescription="@string/description.button.menu"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
