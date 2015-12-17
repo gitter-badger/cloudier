@@ -24,7 +24,7 @@
                 style="@style/TweetCard_Header_NickName"
                 android:layout_toEndOf="@id/image_avatar"
                 android:layout_toRightOf="@id/image_avatar"
-                tools:text="Title"/>
+                android:text="Title"/>
 
             <TextView
                 android:id="@+id/text_username"
@@ -32,7 +32,7 @@
                 android:layout_below="@id/text_nick_name"
                 android:layout_toEndOf="@id/image_avatar"
                 android:layout_toRightOf="@id/image_avatar"
-                tools:text="Subhead"/>
+                android:text="Subhead"/>
 
         </RelativeLayout>
 
@@ -48,7 +48,7 @@
         <TextView
             android:id="@+id/text_content"
             style="@style/TweetCard_Content"
-            tools:text="Greyhound divisively hello coldly wonderfully marginally far upon excluding."/>
+            android:text="Greyhound divisively hello coldly wonderfully marginally far upon excluding."/>
 
         <!-- Actions -->
         <RelativeLayout
@@ -60,13 +60,13 @@
                 android:id="@+id/button_retweet"
                 style="@style/TweetCard_Actions_Button_Retweet"
                 android:contentDescription="@string/description.button.retweet"
-                tools:text="14"/>
+                android:text="14"/>
 
             <Button
                 android:id="@+id/button_comment"
                 style="@style/TweetCard_Actions_Button_Comment"
                 android:contentDescription="@string/description.button.comment"
-                tools:text="5"/>
+                android:text="5"/>
 
             <CheckBox
                 android:id="@+id/button_favorite"
