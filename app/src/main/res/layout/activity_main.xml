@@ -15,21 +15,10 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!--
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-            -->
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/spacing_normal">
-
-            <include layout="@layout/card_tweet"/>
-
-        </FrameLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

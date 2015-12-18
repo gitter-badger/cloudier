@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     @Bind(R.id.srl)
     SwipeRefreshLayout swipeRefreshLayout;
-    // @Bind(R.id.recycler)
-    // RecyclerView recyclerView;
+    @Bind(R.id.recycler)
+    RecyclerView recyclerView;
     @Bind(R.id.fab)
     FloatingActionButton fab;
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         initToolbar();
         initSrl();
-        // initRecyclerView();
+        initRecyclerView();
         initFab();
     }
 
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initSrl() {
+        swipeRefreshLayout.setColorSchemeResources(R.color.light_blue_500, R.color.light_blue_700);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -63,12 +64,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
     private void initRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
-    */
 
 
     private void initFab() {
