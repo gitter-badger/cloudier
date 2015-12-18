@@ -26,14 +26,14 @@
     <style name="TweetCard_Header_NickName">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/spacing_normal</item>
+        <item name="android:layout_marginStart">@dimen/spacing_normal</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
     </style>
 
     <style name="TweetCard_Header_Username">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/spacing_normal</item>
+        <item name="android:layout_marginStart">@dimen/spacing_normal</item>
         <item name="android:layout_marginTop">@dimen/spacing_tiny</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
@@ -51,46 +51,43 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
     </style>
 
-    <style name="TweetCard_Actions_Button" parent="Widget.AppCompat.ActionButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="TweetCard_Actions_Button" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
     </style>
 
-    <style name="TweetCard_Actions_Button_Left" parent="TweetCard_Actions_Button">
-        <item name="android:layout_marginLeft">@dimen/spacing_small</item>
+    <style name="TweetCard_Actions_Button_Start" parent="TweetCard_Actions_Button">
+        <item name="android:layout_marginStart">@dimen/spacing_small</item>
     </style>
 
-    <style name="TweetCard_Actions_Button_Left_Most" parent="TweetCard_Actions_Button">
-        <item name="android:layout_alignParentLeft">true</item>
+    <style name="TweetCard_Actions_Button_Start_Most" parent="TweetCard_Actions_Button">
+        <item name="android:layout_alignParentStart">true</item>
     </style>
 
-    <style name="TweetCard_Actions_Button_Right" parent="TweetCard_Actions_Button">
-        <item name="android:layout_marginRight">@dimen/spacing_small</item>
+    <style name="TweetCard_Actions_Button_End" parent="TweetCard_Actions_Button">
+        <item name="android:layout_marginEnd">@dimen/spacing_small</item>
     </style>
 
-    <style name="TweetCard_Actions_Button_Right_Most" parent="TweetCard_Actions_Button">
+    <style name="TweetCard_Actions_Button_End_Most" parent="TweetCard_Actions_Button">
         <item name="android:layout_alignParentRight">true</item>
     </style>
 
-    <style name="TweetCard_Actions_Button_Retweet" parent="TweetCard_Actions_Button_Left_Most">
-        <item name="android:drawableLeft">@drawable/ic_retweet_black_24dp_54alpha</item>
-        <item name="android:drawableStart">@drawable/ic_retweet_black_24dp_54alpha</item>
+    <style name="TweetCard_Actions_Button_Retweet" parent="TweetCard_Actions_Button_Start_Most">
+        <item name="android:src">@drawable/ic_retweet_black_24dp_54alpha</item>
     </style>
 
-    <style name="TweetCard_Actions_Button_Comment" parent="TweetCard_Actions_Button_Left">
-        <item name="android:layout_toRightOf">@+id/button_retweet</item>
-        <item name="android:drawableLeft">@drawable/ic_comment_black_24dp_54alpha</item>
-        <item name="android:drawableStart">@drawable/ic_comment_black_24dp_54alpha</item>
+    <style name="TweetCard_Actions_Button_Comment" parent="TweetCard_Actions_Button_Start">
+        <item name="android:layout_toEndOf">@+id/button_retweet</item>
+        <item name="android:src">@drawable/ic_comment_black_24dp_54alpha</item>
     </style>
 
-    <style name="TweetCard_Actions_Button_Favorite" parent="TweetCard_Actions_Button_Right">
-        <item name="android:button">@drawable/selector_favorite_button</item>
-        <item name="android:layout_toLeftOf">@+id/button_menu</item>
+    <style name="TweetCard_Actions_Button_Favorite" parent="TweetCard_Actions_Button_End">
+        <item name="android:src">@drawable/selector_favorite_button</item>
+        <item name="android:layout_toStartOf">@+id/button_menu</item>
     </style>
 
-    <style name="TweetCard_Actions_Button_Menu" parent="TweetCard_Actions_Button_Right_Most">
-        <item name="android:drawableLeft">@drawable/ic_more_vert_black_24dp_54alpha</item>
-        <item name="android:drawableStart">@drawable/ic_more_vert_black_24dp_54alpha</item>
+    <style name="TweetCard_Actions_Button_Menu" parent="TweetCard_Actions_Button_End_Most">
+        <item name="android:src">@drawable/ic_more_vert_black_24dp_54alpha</item>
     </style>
 
 </resources>

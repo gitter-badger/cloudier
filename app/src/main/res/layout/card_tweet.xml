@@ -23,16 +23,14 @@
                 android:id="@+id/text_nick_name"
                 style="@style/TweetCard_Header_NickName"
                 android:layout_toEndOf="@id/image_avatar"
-                android:layout_toRightOf="@id/image_avatar"
-                android:text="Title"/>
+                tools:text="Title"/>
 
             <TextView
                 android:id="@+id/text_username"
                 style="@style/TweetCard_Header_Username"
                 android:layout_below="@id/text_nick_name"
                 android:layout_toEndOf="@id/image_avatar"
-                android:layout_toRightOf="@id/image_avatar"
-                android:text="Subhead"/>
+                tools:text="Subhead"/>
 
         </RelativeLayout>
 
@@ -48,7 +46,7 @@
         <TextView
             android:id="@+id/text_content"
             style="@style/TweetCard_Content"
-            android:text="Greyhound divisively hello coldly wonderfully marginally far upon excluding."/>
+            tools:text="Greyhound divisively hello coldly wonderfully marginally far upon excluding."/>
 
         <!-- Actions -->
         <RelativeLayout
@@ -56,24 +54,22 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/spacing_small">
 
-            <Button
+            <ImageButton
                 android:id="@+id/button_retweet"
                 style="@style/TweetCard_Actions_Button_Retweet"
-                android:contentDescription="@string/description.button.retweet"
-                android:text="14"/>
+                android:contentDescription="@string/description.button.retweet"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/button_comment"
                 style="@style/TweetCard_Actions_Button_Comment"
-                android:contentDescription="@string/description.button.comment"
-                android:text="5"/>
+                android:contentDescription="@string/description.button.comment"/>
 
-            <CheckBox
+            <ImageButton
                 android:id="@+id/button_favorite"
                 style="@style/TweetCard_Actions_Button_Favorite"
                 android:contentDescription="@string/description.button.favorite"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/button_menu"
                 style="@style/TweetCard_Actions_Button_Menu"
                 android:contentDescription="@string/description.button.menu"/>
