@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author beta
  */
-public abstract class BaseTweet {
+public abstract class BaseTweet extends TimelineEntry {
 
     public final static int TYPE_ORIGINAL = 1;
     public final static int TYPE_RETWEET = 2;

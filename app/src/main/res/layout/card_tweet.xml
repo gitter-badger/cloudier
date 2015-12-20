@@ -36,11 +36,12 @@
 
         <!-- Image(s) -->
         <!-- TODO: Edit for multiple images. -->
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/image_image"
-            style="@style/TweetCard_Image"
-            app:placeholderImage="@android:color/darker_gray"
-            app:viewAspectRatio="1.78"/>
+        <ViewStub
+            android:id="@+id/stub_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/image_image"
+            android:layout="@layout/stub_tweet_image"/>
 
         <!-- Content -->
         <TextView

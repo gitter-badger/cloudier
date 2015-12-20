@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    style="@style/MessageCard"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        style="@style/MessageCard_Container">
+
+        <!-- Header -->
+        <FrameLayout
+            style="@style/MessageCard_Title">
+
+            <TextView
+                android:id="@+id/text_title"
+                style="@style/MessageCard_Title_Text"
+                tools:text="Welcome to Cloudier"/>
+
+        </FrameLayout>
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/text_message"
+            style="@style/MessageCard_Message"
+            tools:text="Greyhound divisively hello coldly wonderfully marginally far upon excluding."/>
+
+        <!-- Action -->
+        <Button
+            android:id="@+id/button_action"
+            style="@style/MessageCard_Action_Button"
+            tools:text="Got it"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

@@ -5,7 +5,7 @@ package net.kyouko.cloudier.model;
  *
  * @author beta
  */
-public class Tweet {
+public class Tweet extends BaseTweet {
 
     public SourceTweet tweet;
 

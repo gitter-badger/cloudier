@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.drawee.view.SimpleDraweeView
+    style="@style/TweetCard_Image"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:placeholderImage="@android:color/darker_gray"
+    app:viewAspectRatio="1.78"/>
