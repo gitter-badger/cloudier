@@ -6,6 +6,7 @@
     <string name="title.activity.main">Cloudier</string>
     <string name="title.activity.notifications">Notifications</string>
     <string name="title.activity.friends">Friends</string>
+    <string name="title.activity.auth">Account Authorization</string>
 
     <string name="title.tab.followers">Followers</string>
     <string name="title.tab.following">Following</string>
@@ -13,6 +14,7 @@
     <string name="title.action.notifications">Notifications</string>
     <string name="title.action.friends">Friends</string>
     <string name="title.action.settings">Settings</string>
+    <string name="title.action.refresh">Refresh</string>
 
     <string name="description.button.retweet">Retweet</string>
     <string name="description.button.comment">Comment</string>

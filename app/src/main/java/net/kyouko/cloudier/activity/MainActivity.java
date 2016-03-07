@@ -10,16 +10,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 
 import net.kyouko.cloudier.R;
+import net.kyouko.cloudier.model.Account;
+import net.kyouko.cloudier.util.AccountUtil;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final static int ACTION_USER_AUTH = 0;
+
 
     @Bind(R.id.coordinator)
     CoordinatorLayout coordinatorLayout;
@@ -32,12 +40,25 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.fab)
     FloatingActionButton fab;
 
+    RequestQueue requestQueue;
+    private Account currentAccount;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        requestQueue = Volley.newRequestQueue(this);
+
+        initView();
+        if (!hasAuthorized()) {
+            startAuth();
+        }
+    }
+
+
+    private void initView() {
         ButterKnife.bind(this);
 
         initToolbar();
@@ -78,6 +99,36 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+
+    private void loadAuthorizedAccount() {
+        currentAccount = AccountUtil.readAccount(this);
+    }
+
+
+    private boolean hasAuthorized() {
+        loadAuthorizedAccount();
+
+        return (currentAccount.accessToken != null && currentAccount.accessToken.length() > 0);
+    }
+
+
+    private void startAuth() {
+        startActivityForResult(new Intent(this, AuthActivity.class), ACTION_USER_AUTH);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACTION_USER_AUTH) {
+            if (resultCode == RESULT_OK) {
+                loadAuthorizedAccount();
+            } else if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 

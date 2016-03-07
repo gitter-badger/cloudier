@@ -8,12 +8,12 @@ package net.kyouko.cloudier.model;
 public class Account {
 
     public String accessToken;
-    public Integer expiresIn;
+    public String expiresIn;
     public String openId;
     public String openKey;
     public String refreshToken;
     public String username;
-    public String nickName;
+    public String nickname;
     public String avatarUrl;
 
 }

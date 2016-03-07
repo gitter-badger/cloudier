@@ -3,6 +3,8 @@
     package="net.kyouko.cloudier"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".application.CloudierApplication"
         android:allowBackup="true"
@@ -25,8 +27,11 @@
         </activity>
         <activity
             android:name=".activity.FriendsActivity"
-            android:label="@string/title.activity.friends"
-            android:theme="@style/AppTheme">
+            android:label="@string/title.activity.friends">
+        </activity>
+        <activity
+            android:name=".activity.AuthActivity"
+            android:label="@string/title.activity.auth">
         </activity>
     </application>
 
