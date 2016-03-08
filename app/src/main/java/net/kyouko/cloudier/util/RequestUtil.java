@@ -2,6 +2,9 @@ package net.kyouko.cloudier.util;
 
 import android.content.Context;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
 import net.kyouko.cloudier.api.Params;
 import net.kyouko.cloudier.api.RequestError;
 import net.kyouko.cloudier.application.Config;
@@ -24,6 +27,19 @@ import java.util.Map;
  * @author beta
  */
 public class RequestUtil {
+
+
+    private static RequestQueue requestQueue;
+
+
+    public static synchronized RequestQueue getRequestQueue(Context context) {
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        }
+
+        return requestQueue;
+    }
+
 
     public static String generateGetRequestUrl(Context context, String baseUrl, Params params) {
         String url = baseUrl + "?";

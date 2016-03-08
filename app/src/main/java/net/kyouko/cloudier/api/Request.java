@@ -40,7 +40,7 @@ public abstract class Request<ResultType> {
     /**
      * Handles the request result.
      */
-    public void handleResult(ResultType result) {
+    protected void handleResult(ResultType result) {
         if (successListener != null) {
             successListener.onRequestSuccess(result);
         }
