@@ -1,5 +1,9 @@
 # Cloudier
 
-轻量的腾讯微博 Android 客户端。
+A lightweight Android client for Tencent Weibo.
 
-开发中。
+WIP.
+
+## License
+
+This project is open-sourced under the Apache License 2.0.
