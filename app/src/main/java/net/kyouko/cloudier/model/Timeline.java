@@ -1,6 +1,9 @@
 package net.kyouko.cloudier.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class for the timeline.
@@ -9,7 +12,9 @@ import java.util.List;
  */
 public class Timeline {
 
-    public List<Tweet> tweets;
+    public Long timestamp;
     public Boolean hasNext;
+    public List<Tweet> tweets = new ArrayList<>();
+    public Map<String, String> userList = new HashMap<>();
 
 }

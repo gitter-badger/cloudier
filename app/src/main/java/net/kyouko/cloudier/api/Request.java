@@ -1,7 +1,5 @@
 package net.kyouko.cloudier.api;
 
-import android.util.Log;
-
 import net.kyouko.cloudier.ui.activity.RequestActivity;
 
 /**
@@ -53,7 +51,6 @@ public abstract class Request<ResultType> {
      * Handles the request error.
      */
     protected void handleError(RequestError error) {
-        Log.e("[Request error]", error.getLocalizedMessage());
         if (errorListener != null) {
             errorListener.onRequestError(error);
         }

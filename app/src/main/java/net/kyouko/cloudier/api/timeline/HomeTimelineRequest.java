@@ -2,6 +2,12 @@ package net.kyouko.cloudier.api.timeline;
 
 import android.content.Context;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import net.kyouko.cloudier.api.RequestError;
+import net.kyouko.cloudier.api.RequestResult;
 import net.kyouko.cloudier.ui.activity.RequestActivity;
 import net.kyouko.cloudier.api.JsonParams;
 import net.kyouko.cloudier.api.Request;
@@ -9,6 +15,8 @@ import net.kyouko.cloudier.api.RequestErrorListener;
 import net.kyouko.cloudier.api.RequestSuccessListener;
 import net.kyouko.cloudier.model.Timeline;
 import net.kyouko.cloudier.util.RequestUtil;
+
+import org.json.JSONObject;
 
 /**
  * A custom {@link Request} to fetch the timeline of home page.
@@ -130,7 +138,7 @@ public class HomeTimelineRequest extends Request<Timeline> {
     /**
      * Creates a new instance of request.
      *
-     * @param activity        a {@link RequestActivity} to execute the request.
+     * @param activity        a {@link RequestActivity} to execute the request
      * @param type            type filter of tweets to fetch
      * @param contentType     type filter of content
      * @param requestNumber   number of tweets to fetch
@@ -162,8 +170,44 @@ public class HomeTimelineRequest extends Request<Timeline> {
         params.put("pagetime", Long.toString(pageTime));
 
         String url = RequestUtil.generateGetRequestUrl((Context) activity, API_URL, params);
-        //
+
+        request = new JsonObjectRequest(url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            HomeTimelineRequestResult result = new HomeTimelineRequestResult(response);
+                            handleResult(result.getData());
+                        } catch (RequestError error) {
+                            handleError(error);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        handleError(RequestError.createNetworkError(error));
+                    }
+                }
+        );
+        request.setShouldCache(false);
+
+        activity.executeRequest(request);
     }
 
+
+    private class HomeTimelineRequestResult extends RequestResult<Timeline> {
+
+        public HomeTimelineRequestResult(JSONObject response) throws RequestError {
+            super(response);
+        }
+
+
+        @Override
+        protected void parseResponse(JSONObject response) throws RequestError {
+            data = RequestUtil.parseTimelineFromResponse(response);
+        }
+
+    }
 
 }

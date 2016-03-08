@@ -1,5 +1,8 @@
 package net.kyouko.cloudier.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class for a piece of tweet.
  *
@@ -7,6 +10,7 @@ package net.kyouko.cloudier.model;
  */
 public class Tweet extends BaseTweet {
 
-    public SourceTweet tweet;
+    public SourceTweet sourceTweet;
+    public Map<String, String> userList = new HashMap<>();
 
 }

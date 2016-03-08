@@ -16,9 +16,11 @@ public class User {
     public String nickName;
     public String avatarUrl;
     public Integer gender;
+    public Integer tweetCount;
     public Integer followerCount;
     public Integer followingCount;
     public Boolean isFollowingCurrentUser;
     public Boolean isFollowedByCurrentUser;
+    public Boolean isInBlackListOfCurrentUser;
 
 }

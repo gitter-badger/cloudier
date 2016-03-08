@@ -26,7 +26,7 @@ public abstract class BaseTweet extends TimelineEntry {
 
 
     public Long id;
-    public UserBrief user;
+    public BriefUser user = new BriefUser();
     public Boolean sentBySelf;
     public Long timestamp;
     public Integer type;
@@ -34,6 +34,7 @@ public abstract class BaseTweet extends TimelineEntry {
     public String originalContent;
     public Integer retweetedCount;
     public Integer commentedCount;
+    public Integer likedCount;
     public String from;
     public String fromUrl;
     public List<String> images = new ArrayList<>();
@@ -43,12 +44,13 @@ public abstract class BaseTweet extends TimelineEntry {
     /**
      * Class for the brief information of a user used in tweets.
      */
-    public class UserBrief {
+    public static class BriefUser {
+
         public String username;
         public String nickName;
         public String openId;
         public String avatarUrl;
-        public Boolean isVip;
+
     }
 
 }
