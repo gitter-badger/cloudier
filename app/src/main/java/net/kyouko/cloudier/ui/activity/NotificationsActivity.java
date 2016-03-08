@@ -1,4 +1,4 @@
-package net.kyouko.cloudier.activity;
+package net.kyouko.cloudier.ui.activity;
 
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;

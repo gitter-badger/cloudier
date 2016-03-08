@@ -1,4 +1,4 @@
-package net.kyouko.cloudier.fragment;
+package net.kyouko.cloudier.ui.fragment;
 
 
 import android.os.Bundle;

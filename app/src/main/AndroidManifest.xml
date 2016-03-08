@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:label="@string/title.activity.main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -22,15 +22,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.NotificationsActivity"
+            android:name=".ui.activity.NotificationsActivity"
             android:label="@string/title.activity.notifications">
         </activity>
         <activity
-            android:name=".activity.FriendsActivity"
+            android:name=".ui.activity.FriendsActivity"
             android:label="@string/title.activity.friends">
         </activity>
         <activity
-            android:name=".activity.AuthActivity"
+            android:name=".ui.activity.AuthActivity"
             android:label="@string/title.activity.auth">
         </activity>
     </application>

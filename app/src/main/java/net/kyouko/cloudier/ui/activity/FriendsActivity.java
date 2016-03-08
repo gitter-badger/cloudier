@@ -1,4 +1,4 @@
-package net.kyouko.cloudier.activity;
+package net.kyouko.cloudier.ui.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import net.kyouko.cloudier.R;
-import net.kyouko.cloudier.fragment.UserListFragment;
+import net.kyouko.cloudier.ui.fragment.UserListFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

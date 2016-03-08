@@ -2,7 +2,7 @@ package net.kyouko.cloudier.api.timeline;
 
 import android.content.Context;
 
-import net.kyouko.cloudier.activity.RequestActivity;
+import net.kyouko.cloudier.ui.activity.RequestActivity;
 import net.kyouko.cloudier.api.JsonParams;
 import net.kyouko.cloudier.api.Request;
 import net.kyouko.cloudier.api.RequestErrorListener;

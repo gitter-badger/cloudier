@@ -2,7 +2,7 @@ package net.kyouko.cloudier.api;
 
 import android.util.Log;
 
-import net.kyouko.cloudier.activity.RequestActivity;
+import net.kyouko.cloudier.ui.activity.RequestActivity;
 
 /**
  * Base class for all the API requests.
