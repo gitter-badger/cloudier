@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +24,14 @@ import net.kyouko.cloudier.api.RequestError;
 import net.kyouko.cloudier.api.RequestErrorListener;
 import net.kyouko.cloudier.api.RequestSuccessListener;
 import net.kyouko.cloudier.api.timeline.HomeTimelineRequest;
+import net.kyouko.cloudier.api.tweet.CommentRequest;
+import net.kyouko.cloudier.api.tweet.RetweetRequest;
 import net.kyouko.cloudier.api.tweet.SendTweetRequest;
 import net.kyouko.cloudier.model.Account;
 import net.kyouko.cloudier.model.LoadMoreModel;
 import net.kyouko.cloudier.model.Timeline;
 import net.kyouko.cloudier.model.TimelineEntry;
+import net.kyouko.cloudier.model.Tweet;
 import net.kyouko.cloudier.model.TweetId;
 import net.kyouko.cloudier.ui.adapter.TimelineAdapter;
 import net.kyouko.cloudier.ui.dialog.EditTweetDialog;
@@ -46,11 +48,17 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements RequestActivity {
+public class MainActivity extends AppCompatActivity
+        implements RequestActivity, TimelineAdapter.OnRetweetListener,
+        TimelineAdapter.OnCommentListener, TimelineAdapter.OnLoadMoreTweetsListener,
+        TimelineAdapter.OnShowTweetImagesListener {
 
     private final static int ACTION_USER_AUTH = 0;
+
     private final static String TAG_REQUESTS = "REQUEST_MAIN";
-    private final static String TAG_EDIT_TWEET_DIALOG = "EDIT_TWEET_DIALOG";
+    private final static String TAG_NEW_TWEET_DIALOG = "NEW_TWEET_DIALOG";
+    private final static String TAG_RETWEET_DIALOG = "RETWEET_DIALOG";
+    private final static String TAG_COMMENT_DIALOG = "COMMENT_DIALOG";
 
 
     @Bind(R.id.coordinator)
@@ -119,12 +127,10 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         adapter = new TimelineAdapter(this, timelineEntries, timelineUserList);
-        adapter.setOnLoadMoreTweetsListener(new TimelineAdapter.OnLoadMoreTweetsListener() {
-            @Override
-            public void onLoadMoreTweets() {
-                fetchMoreHomeTimeline();
-            }
-        });
+        adapter.setOnRetweetListener(this);
+        adapter.setOnCommentListener(this);
+        adapter.setOnLoadMoreTweetsListener(this);
+        adapter.setOnShowTweetImagesListener(this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -147,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
                         }
                     }
                 });
-                editTweetDialog.show(getSupportFragmentManager(), TAG_EDIT_TWEET_DIALOG);
+                editTweetDialog.show(getSupportFragmentManager(), TAG_NEW_TWEET_DIALOG);
             }
         });
     }
@@ -311,31 +317,181 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
         final ProgressDialog progressDialog = ProgressDialog.show(this, "",
                 getString(R.string.text_progress_sending_tweet), true);
 
-        new SendTweetRequest(this, content, new RequestSuccessListener<TweetId>() {
+        new SendTweetRequest(this, content,
+                new RequestSuccessListener<TweetId>() {
+                    @Override
+                    public void onRequestSuccess(TweetId result) {
+                        progressDialog.dismiss();
+                        Snackbar.make(coordinatorLayout, getString(R.string.text_info_tweet_send_success),
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                },
+                new RequestErrorListener() {
+                    @Override
+                    public void onRequestError(RequestError error) {
+                        progressDialog.dismiss();
+                        Snackbar.make(coordinatorLayout, getString(R.string.text_info_tweet_send_fail),
+                                Snackbar.LENGTH_SHORT)
+                                .setAction(getString(R.string.title_action_resend),
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                // TODO: resend after fail
+                                                Toast.makeText(getApplicationContext(),
+                                                        "Coming soon", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                ).show();
+                    }
+                }
+        ).execute();
+    }
+
+
+    private void retweetTweet(long tweetId, String content) {
+        final ProgressDialog progressDialog = ProgressDialog.show(this, "",
+                getString(R.string.text_progress_sending_tweet), true);
+
+        new RetweetRequest(this, tweetId, content,
+                new RequestSuccessListener<TweetId>() {
+                    @Override
+                    public void onRequestSuccess(TweetId result) {
+                        progressDialog.dismiss();
+                        Snackbar.make(coordinatorLayout,
+                                getString(R.string.text_info_retweet_success),
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                },
+                new RequestErrorListener() {
+                    @Override
+                    public void onRequestError(RequestError error) {
+                        progressDialog.dismiss();
+                        Snackbar.make(coordinatorLayout, getString(R.string.text_info_retweet_fail),
+                                Snackbar.LENGTH_SHORT)
+                                .setAction(getString(R.string.title_action_resend),
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                // TODO: resend after fail
+                                                Toast.makeText(getApplicationContext(),
+                                                        "Coming soon", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                ).show();
+                    }
+                }
+        ).execute();
+    }
+
+
+    private void commentTweet(long tweetId, String content) {
+        final ProgressDialog progressDialog = ProgressDialog.show(this, "",
+                getString(R.string.text_progress_sending_tweet), true);
+
+        new CommentRequest(this, tweetId, content,
+                new RequestSuccessListener<TweetId>() {
+                    @Override
+                    public void onRequestSuccess(TweetId result) {
+                        progressDialog.dismiss();
+                        Snackbar.make(coordinatorLayout,
+                                getString(R.string.text_info_comment_success),
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                },
+                new RequestErrorListener() {
+                    @Override
+                    public void onRequestError(RequestError error) {
+                        progressDialog.dismiss();
+                        Snackbar.make(coordinatorLayout, getString(R.string.text_info_comment_fail),
+                                Snackbar.LENGTH_SHORT)
+                                .setAction(getString(R.string.title_action_resend),
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                // TODO: resend after fail
+                                                Toast.makeText(getApplicationContext(),
+                                                        "Coming soon", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                ).show();
+                    }
+                }
+        ).execute();
+    }
+
+
+    @Override
+    public void onLoadMoreTweets() {
+        fetchMoreHomeTimeline();
+    }
+
+
+    @Override
+    public void onRetweet(final Tweet tweet) {
+        final EditTweetDialog retweetDialog = new EditTweetDialog();
+
+        Bundle args = new Bundle();
+        args.putBoolean(EditTweetDialog.ARG_IS_RETWEET_OR_COMMENT, true);
+        args.putSerializable(EditTweetDialog.ARG_SOURCE_TWEET, tweet);
+        retweetDialog.setArguments(args);
+
+        retweetDialog.setOnEditFinishedListener(new EditTweetDialog.OnEditFinishedListener() {
             @Override
-            public void onRequestSuccess(TweetId result) {
-                progressDialog.dismiss();
-                Snackbar.make(coordinatorLayout, getString(R.string.text_info_tweet_send_success),
-                        Snackbar.LENGTH_SHORT).show();
+            public void onEditFinished(String content) {
+                retweetDialog.dismiss();
+                retweetTweet(tweet.id, content);
             }
-        }, new RequestErrorListener() {
+        });
+
+        retweetDialog.show(getSupportFragmentManager(), TAG_RETWEET_DIALOG);
+    }
+
+
+    @Override
+    public void onComment(final Tweet tweet) {
+        final EditTweetDialog commentDialog = new EditTweetDialog();
+
+        Bundle args = new Bundle();
+        args.putBoolean(EditTweetDialog.ARG_IS_RETWEET_OR_COMMENT, true);
+        args.putSerializable(EditTweetDialog.ARG_SOURCE_TWEET, tweet);
+        commentDialog.setArguments(args);
+
+        commentDialog.setOnEditFinishedListener(new EditTweetDialog.OnEditFinishedListener() {
             @Override
-            public void onRequestError(RequestError error) {
-                progressDialog.dismiss();
-                Log.e("Error", error.getLocalizedMessage());
-                Snackbar.make(coordinatorLayout, getString(R.string.text_info_tweet_send_fail),
-                        Snackbar.LENGTH_SHORT)
-                        .setAction(getString(R.string.title_action_resend),
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        // TODO: resend after fail
-                                        Toast.makeText(getApplicationContext(), "Coming soon", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                        ).show();
+            public void onEditFinished(String content) {
+                commentDialog.dismiss();
+                commentTweet(tweet.id, content);
             }
-        }).execute();
+        });
+
+        commentDialog.show(getSupportFragmentManager(), TAG_RETWEET_DIALOG);
+    }
+
+
+    @Override
+    public void onShowSingleImage(String imageUrl) {
+        Intent showImageIntent = new Intent(this, ImageActivity.class);
+
+        Bundle args = new Bundle();
+        args.putBoolean(ImageActivity.ARG_IS_MULTIPLE_IMAGES, false);
+        args.putString(ImageActivity.ARG_IMAGE_URL, imageUrl);
+        showImageIntent.putExtra("ARGS", args);
+
+        startActivity(showImageIntent);
+    }
+
+
+    @Override
+    public void onShowImages(ArrayList<String> imageUrls, int index) {
+        Intent showImageIntent = new Intent(this, ImageActivity.class);
+
+        Bundle args = new Bundle();
+        args.putBoolean(ImageActivity.ARG_IS_MULTIPLE_IMAGES, true);
+        args.putStringArrayList(ImageActivity.ARG_IMAGE_URLS, imageUrls);
+        args.putInt(ImageActivity.ARG_IMAGE_INDEX, index);
+        showImageIntent.putExtra("ARGS", args);
+
+        startActivity(showImageIntent);
     }
 
 

@@ -7,6 +7,7 @@
     <string name="title.activity.notifications">Notifications</string>
     <string name="title.activity.friends">Friends</string>
     <string name="title.activity.auth">Account Authorization</string>
+    <string name="title.activity.image">View Image</string>
 
     <string name="title.tab.followers">Followers</string>
     <string name="title.tab.following">Following</string>
@@ -37,10 +38,16 @@
     <string name="text.info.empty_content">Write something please</string>
     <string name="text.info.tweet_send_success">Tweet sent successfully</string>
     <string name="text.info.tweet_send_fail">Failed to send tweet</string>
+    <string name="text.info.retweet_success">Retweeted successfully</string>
+    <string name="text.info.retweet_fail">Failed to retweet</string>
+    <string name="text.info.comment_success">Commented successfully</string>
+    <string name="text.info.comment_fail">Failed to comment</string>
     <string name="text.info.no_new_tweet">No new tweet</string>
     <string name="text.info.error">Error: %s</string>
 
     <string name="text.hint.edit_tweet">Write something …</string>
+
+    <string name="text.symbol.colon">:\u00A0</string>
 
     <string name="description.button.retweet">Retweet</string>
     <string name="description.button.comment">Comment</string>

@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Header -->
     <RelativeLayout
         style="@style/TweetDialog_Header">
 
@@ -33,11 +34,21 @@
 
     </RelativeLayout>
 
+    <!-- Source Tweet -->
+    <ViewStub
+        android:id="@+id/stub_source_tweet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inflatedId="@+id/view_source_tweet"
+        android:layout="@layout/stub_edit_tweet_source"/>
+
+    <!-- Content -->
     <EditText
         android:id="@+id/edit_content"
         style="@style/TweetDialog_EditContent"
         android:hint="@string/text.hint.edit_tweet"/>
 
+    <!-- Actions -->
     <RelativeLayout
         style="@style/TweetDialog_Actions">
 

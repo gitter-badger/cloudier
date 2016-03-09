@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,6 +19,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import net.kyouko.cloudier.R;
 import net.kyouko.cloudier.model.Account;
+import net.kyouko.cloudier.model.SourceTweet;
+import net.kyouko.cloudier.model.Tweet;
 import net.kyouko.cloudier.util.AccountUtil;
 import net.kyouko.cloudier.util.ImageUtil;
 
@@ -36,6 +39,10 @@ public class EditTweetDialog extends DialogFragment {
     }
 
 
+    public final static String ARG_IS_RETWEET_OR_COMMENT = "IS_RETWEET_OR_COMMENT";
+    public final static String ARG_SOURCE_TWEET = "SOURCE_TWEET";
+
+
     @Bind(R.id.image_avatar)
     SimpleDraweeView imageAvatar;
     @Bind(R.id.text_nickname)
@@ -44,14 +51,24 @@ public class EditTweetDialog extends DialogFragment {
     TextView textUsername;
     @Bind(R.id.button_send)
     ImageButton buttonSend;
+    @Bind(R.id.stub_source_tweet)
+    ViewStub stubSourceTweet;
     @Bind(R.id.edit_content)
     EditText editContent;
+    @Bind(R.id.button_add_image)
+    ImageButton buttonAddImage;
+    @Bind(R.id.button_add_person)
+    ImageButton buttonAddPerson;
     @Bind(R.id.text_word_count)
     TextView textWordCount;
+
 
     private Account currentAccount;
     private int wordCountAvailable = 140;
     private OnEditFinishedListener onEditFinishedListener;
+
+    private boolean isRetweetOrComment = false;
+    private Tweet sourceTweet;
 
 
     @Override
@@ -71,6 +88,27 @@ public class EditTweetDialog extends DialogFragment {
         textNickname.setText(currentAccount.nickname);
         String username = "@" + currentAccount.username;
         textUsername.setText(username);
+
+
+        // Source tweet
+        if (getArguments() != null) {
+            isRetweetOrComment = getArguments().getBoolean(ARG_IS_RETWEET_OR_COMMENT, false);
+            if (isRetweetOrComment) {
+                sourceTweet = (Tweet) getArguments().getSerializable(ARG_SOURCE_TWEET);
+
+                View viewSourceTweet = stubSourceTweet.inflate();
+                TextView textSourceTweetNickname = (TextView) viewSourceTweet.findViewById(R.id.text_source_nickname);
+                TextView textSourceTweetContent = (TextView) viewSourceTweet.findViewById(R.id.text_source_content);
+
+                String sourceTweetNickname = sourceTweet.user.nickName + getString(R.string.text_symbol_colon);
+                textSourceTweetNickname.setText(sourceTweetNickname);
+
+                textSourceTweetContent.setText(sourceTweet.originalContent); // TODO: replace original content with parsed content
+
+                buttonAddImage.setVisibility(View.GONE);
+            }
+        }
+
 
         editContent.addTextChangedListener(new TextWatcher() {
             @Override

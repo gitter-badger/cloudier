@@ -1,5 +1,6 @@
 package net.kyouko.cloudier.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import java.util.Map;
  *
  * @author beta
  */
-public class Tweet extends BaseTweet {
+public class Tweet extends BaseTweet implements Serializable {
 
     public boolean hasSourceTweet = false;
     public SourceTweet sourceTweet = null;

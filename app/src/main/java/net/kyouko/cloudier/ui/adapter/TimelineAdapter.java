@@ -28,6 +28,7 @@ import net.kyouko.cloudier.util.ImageUtil;
 import net.kyouko.cloudier.util.TextUtil;
 import net.kyouko.cloudier.util.TimeUtil;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -46,6 +47,23 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     }
 
 
+    public interface OnRetweetListener {
+        void onRetweet(Tweet tweet);
+    }
+
+
+    public interface OnCommentListener {
+        void onComment(Tweet tweet);
+    }
+
+
+    public interface OnShowTweetImagesListener {
+        void onShowSingleImage(String imageUrl);
+
+        void onShowImages(ArrayList<String> imageUrls, int index);
+    }
+
+
     private final static int TYPE_TWEET = 0;
     private final static int TYPE_LOAD_MORE = 1;
 
@@ -56,6 +74,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
 
     private OnLoadMoreTweetsListener onLoadMoreTweetsListener;
     private LoadMoreViewHolder loadMoreViewHolder;
+
+    private OnRetweetListener onRetweetListener;
+    private OnCommentListener onCommentListener;
+    private OnShowTweetImagesListener onShowTweetImagesListener;
 
     private int shortAnimationDuration;
 
@@ -185,7 +207,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     }
 
 
-    private void showTweetContent(TweetViewHolder holder, Tweet tweet) {
+    private void showTweetContent(TweetViewHolder holder, final Tweet tweet) {
         holder.imageAvatar.setImageURI(Uri.parse(
                 imageUtil.parseImageUrl(tweet.user.avatarUrl)
         ));
@@ -205,7 +227,24 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         }
 
         holder.buttonRetweet.setText(String.valueOf(tweet.retweetedCount));
+        holder.buttonRetweet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onRetweetListener != null) {
+                    onRetweetListener.onRetweet(tweet);
+                }
+            }
+        });
+
         holder.buttonComment.setText(String.valueOf(tweet.commentedCount));
+        holder.buttonComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onCommentListener != null) {
+                    onCommentListener.onComment(tweet);
+                }
+            }
+        });
     }
 
 
@@ -258,7 +297,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     }
 
 
-    private void loadSingleImage(TweetViewHolder holder, String imageUrl) {
+    private void loadSingleImage(TweetViewHolder holder, final String imageUrl) {
         View viewImage;
 
         if (holder.itemView.findViewById(R.id.view_single_image) != null) {
@@ -269,10 +308,18 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         }
 
         ((SimpleDraweeView) viewImage).setImageURI(Uri.parse(ImageUtil.getInstance(context).parseImageUrl(imageUrl)));
+        viewImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onShowTweetImagesListener != null) {
+                    onShowTweetImagesListener.onShowSingleImage(imageUrl);
+                }
+            }
+        });
     }
 
 
-    private void loadMultipleImages(TweetViewHolder holder, List<String> imageUrls) {
+    private void loadMultipleImages(TweetViewHolder holder, final List<String> imageUrls) {
         View viewImage;
 
         if (holder.itemView.findViewById(R.id.view_images) != null) {
@@ -284,9 +331,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
 
         LinearLayout layoutImagesList = (LinearLayout) viewImage.findViewById(R.id.layout_image_list);
         layoutImagesList.removeAllViewsInLayout();
-        for (String imageUrl : imageUrls) {
+        for (int i = 0; i < imageUrls.size(); i += 1) {
+            final int index = i;
             SimpleDraweeView image = (SimpleDraweeView) LayoutInflater.from(context).inflate(R.layout.template_tweet_image, layoutImagesList, false);
-            image.setImageURI(Uri.parse(ImageUtil.getInstance(context).parseImageUrl(imageUrl)));
+            image.setImageURI(Uri.parse(ImageUtil.getInstance(context).parseImageUrl(imageUrls.get(i))));
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onShowTweetImagesListener != null) {
+                        ArrayList<String> urls = new ArrayList<String>(imageUrls);
+                        onShowTweetImagesListener.onShowImages(urls, index);
+                    }
+                }
+            });
             layoutImagesList.addView(image);
         }
     }
@@ -352,6 +409,21 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
 
     public void setOnLoadMoreTweetsListener(OnLoadMoreTweetsListener listener) {
         onLoadMoreTweetsListener = listener;
+    }
+
+
+    public void setOnRetweetListener(OnRetweetListener listener) {
+        onRetweetListener = listener;
+    }
+
+
+    public void setOnCommentListener(OnCommentListener listener) {
+        onCommentListener = listener;
+    }
+
+
+    public void setOnShowTweetImagesListener(OnShowTweetImagesListener listener) {
+        onShowTweetImagesListener = listener;
     }
 
 

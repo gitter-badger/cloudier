@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    style="@style/TweetDialog_SourceTweet"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/text_source_nickname"
+        style="@style/TweetDialog_SourceTweet_Nickname"
+        tools:text="Nickname:"/>
+
+    <TextView
+        android:id="@+id/text_source_content"
+        style="@style/TweetDialog_SourceTweet_Content"
+        android:layout_toEndOf="@id/text_source_nickname"
+        tools:text="Content here"/>
+
+</RelativeLayout>

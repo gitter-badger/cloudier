@@ -47,6 +47,12 @@ public class ImageUtil {
 
 
     public String parseImageUrl(String originalUrl) {
+        // TODO: WiFi or cellular?
+        return parseImageUrl(originalUrl, imageQualityOverWifi);
+    }
+
+
+    public String parseImageUrl(String originalUrl, int quality) {
         int indexOfQpic = originalUrl.indexOf("qpic.cn");
         if (indexOfQpic >= 0) {
             String imageUrl = "http://" + prefix + "." + originalUrl.substring(indexOfQpic);
@@ -54,7 +60,7 @@ public class ImageUtil {
             if (!imageUrl.endsWith("/")) {
                 imageUrl += "/";
             }
-            switch (imageQualityOverWifi) {
+            switch (quality) {
                 case QUALITY_ORIGINAL:
                 default:
                     imageUrl += SUFFIX_IMAGE_ORIGINAL;
@@ -80,7 +86,7 @@ public class ImageUtil {
             if (!imageUrl.endsWith("/")) {
                 imageUrl += "/";
             }
-            switch (imageQualityOverWifi) {
+            switch (quality) {
                 case QUALITY_ORIGINAL:
                 default:
                     imageUrl += SUFFIX_AVATAR_ORIGINAL;
