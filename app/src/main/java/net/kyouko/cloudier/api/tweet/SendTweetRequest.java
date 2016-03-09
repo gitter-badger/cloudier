@@ -8,6 +8,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 import net.kyouko.cloudier.api.JsonParams;
+import net.kyouko.cloudier.api.PostRequest;
 import net.kyouko.cloudier.api.Request;
 import net.kyouko.cloudier.api.RequestError;
 import net.kyouko.cloudier.api.RequestErrorListener;
@@ -57,17 +58,14 @@ public class SendTweetRequest extends Request<TweetId> {
         final JsonParams params = new JsonParams();
         params.put("content", content);
 
-        request = new StringRequest(com.android.volley.Request.Method.POST, API_URL,
-                new Response.Listener<String>() {
+        request = new PostRequest(API_URL,
+                RequestUtil.generatePostRequestParams((Context) activity, params),
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        Log.i("Response", response);
+                    public void onResponse(JSONObject response) {
                         try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            SendTweetRequestResult result = new SendTweetRequestResult(jsonResponse);
+                            SendTweetRequestResult result = new SendTweetRequestResult(response);
                             handleResult(result.getData());
-                        } catch (JSONException ex) {
-                            handleError(RequestError.createJsonError(ex));
                         } catch (RequestError requestError) {
                             handleError(requestError);
                         }
@@ -79,12 +77,7 @@ public class SendTweetRequest extends Request<TweetId> {
                         handleError(RequestError.createNetworkError(error));
                     }
                 }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                return RequestUtil.generatePostRequestParams((Context) activity, params);
-            }
-        };
+        );
         request.setShouldCache(false);
 
         activity.executeRequest(request);
