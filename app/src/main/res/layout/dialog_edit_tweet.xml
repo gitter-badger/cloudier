@@ -38,8 +38,6 @@
         style="@style/TweetDialog_EditContent"
         android:hint="@string/text.hint.edit_tweet"/>
 
-    <!-- TODO: images -->
-
     <RelativeLayout
         style="@style/TweetDialog_Actions">
 
