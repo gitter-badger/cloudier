@@ -1,6 +1,7 @@
 package net.kyouko.cloudier.ui.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -33,6 +34,7 @@ import net.kyouko.cloudier.model.TweetId;
 import net.kyouko.cloudier.ui.adapter.TimelineAdapter;
 import net.kyouko.cloudier.ui.dialog.EditTweetDialog;
 import net.kyouko.cloudier.util.AccountUtil;
+import net.kyouko.cloudier.util.PreferenceUtil;
 import net.kyouko.cloudier.util.RequestUtil;
 
 import java.util.ArrayList;
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
     @Bind(R.id.fab)
     FloatingActionButton fab;
 
+    private Context context;
     private RequestQueue requestQueue;
     private Account currentAccount;
     private TimelineAdapter adapter;
@@ -75,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        context = this;
 
         initView();
         initRequestQueue();

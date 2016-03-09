@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
  */
 public class PreferenceUtil {
 
-    public final static String PREF_INITIAL_SETUP = "initial_setup";
+    public final static String PREF_APP_HAS_INITIAL_SETUP = "app.has_initial_setup";
 
     public final static String PREF_ACCOUNT_ACCESS_TOKEN = "account.access_token";
     public final static String PREF_ACCOUNT_EXPIRES_IN = "account.expires_in";

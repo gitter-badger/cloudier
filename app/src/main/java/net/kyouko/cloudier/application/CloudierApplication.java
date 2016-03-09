@@ -22,7 +22,7 @@ public class CloudierApplication extends Application {
 
 
     private boolean hasInitialSetup() {
-        return PreferenceUtil.with(this).readBoolean(PreferenceUtil.PREF_INITIAL_SETUP);
+        return PreferenceUtil.with(this).readBoolean(PreferenceUtil.PREF_APP_HAS_INITIAL_SETUP);
     }
 
 
@@ -34,7 +34,7 @@ public class CloudierApplication extends Application {
                         ImageUtil.QUALITY_HIGH)
                 .writeString(PreferenceUtil.PREF_IMAGE_SOURCE,
                         ImageUtil.PREFIX_APP)
-                .writeBoolean(PreferenceUtil.PREF_INITIAL_SETUP, true)
+                .writeBoolean(PreferenceUtil.PREF_APP_HAS_INITIAL_SETUP, true)
                 .apply();
     }
 

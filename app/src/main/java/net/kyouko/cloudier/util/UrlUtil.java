@@ -1,5 +1,9 @@
 package net.kyouko.cloudier.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -52,6 +56,12 @@ public class UrlUtil {
         }
 
         return params;
+    }
+
+
+    public static void openUrl(Context context, String url) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(browserIntent);
     }
 
 }

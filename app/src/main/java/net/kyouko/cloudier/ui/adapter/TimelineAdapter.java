@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import net.kyouko.cloudier.R;
-import net.kyouko.cloudier.model.AppMessage;
 import net.kyouko.cloudier.model.SourceTweet;
 import net.kyouko.cloudier.model.TimelineEntry;
 import net.kyouko.cloudier.model.Tweet;
@@ -37,6 +35,7 @@ import butterknife.ButterKnife;
  * @author beta
  */
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseViewHolder> {
+
 
     private final static int TYPE_MESSAGE = 0;
     private final static int TYPE_TWEET = 1;
@@ -61,11 +60,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         switch (viewType) {
-            case TYPE_MESSAGE:
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.card_message, parent, false);
-                return new MessageViewHolder(view);
-
             case TYPE_TWEET:
             default:
                 view = LayoutInflater.from(parent.getContext())
@@ -83,10 +77,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
-            case TYPE_MESSAGE:
-                bindMessageCardHolder((MessageViewHolder) holder, (AppMessage) entries.get(position));
-                break;
-
             case TYPE_TWEET:
                 bindTweetCardHolder((TweetViewHolder) holder, (Tweet) entries.get(position));
                 break;
@@ -95,11 +85,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
                 bindLoadMoreViewHolder((LoadMoreViewHolder) holder);
                 break;
         }
-    }
-
-
-    private void bindMessageCardHolder(MessageViewHolder holder, AppMessage message) {
-        // TODO: show app messages
     }
 
 
@@ -157,9 +142,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     @Override
     public int getItemViewType(int position) {
         TimelineEntry entry = entries.get(position);
-        if (entry instanceof AppMessage) {
-            return TYPE_MESSAGE;
-        } else if (entry instanceof Tweet) {
+        if (entry instanceof Tweet) {
             return TYPE_TWEET;
         } else {
             return TYPE_TWEET;
@@ -189,17 +172,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         }
 
         return builder;
-    }
-
-
-    private String areplaceUsernameWithNicknameInContent(String originalContent) {
-        String content = originalContent;
-
-        for (LinkedHashMap.Entry<String, String> entry : userList.entrySet()) {
-            content = content.replaceAll("@" + entry.getKey(), entry.getValue());
-        }
-
-        return content;
     }
 
 
@@ -295,16 +267,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
      */
     public static abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         public BaseViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-
-    /**
-     * View holder for cards of app messages.
-     */
-    public static class MessageViewHolder extends BaseViewHolder {
-        public MessageViewHolder(View itemView) {
             super(itemView);
         }
     }

@@ -33,12 +33,11 @@
     <string name="text.date.date_time_pattern">MMM d HH:mm</string>
     <string name="text.date.date_time_pattern_with_year">MMM d, yyyy HH:mm</string>
 
-    <string name="text.info.welcome">Welcome to Cloudier</string>
     <string name="text.info.auth_succeeded">Authorization succeeded</string>
     <string name="text.info.empty_content">Write something please</string>
     <string name="text.info.tweet_send_success">Tweet sent successfully</string>
     <string name="text.info.tweet_send_fail">Failed to send tweet</string>
-    
+
     <string name="text.hint.edit_tweet">Write something …</string>
 
     <string name="description.button.retweet">Retweet</string>
