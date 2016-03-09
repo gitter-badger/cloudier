@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import net.kyouko.cloudier.model.SourceTweet;
 import net.kyouko.cloudier.model.TimelineEntry;
 import net.kyouko.cloudier.model.Tweet;
 import net.kyouko.cloudier.util.ImageUtil;
+import net.kyouko.cloudier.util.TextUtil;
 import net.kyouko.cloudier.util.TimeUtil;
 
 import java.util.LinkedHashMap;
@@ -89,21 +91,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
 
 
     private void bindTweetCardHolder(TweetViewHolder holder, Tweet tweet) {
-        holder.imageAvatar.setImageURI(Uri.parse(
-                imageUtil.parseImageUrl(tweet.user.avatarUrl)
-        ));
-        holder.textNickName.setText(tweet.user.nickName);
-        holder.textTime.setText(TimeUtil.getDescription(context,
-                TimeUtil.convertTimestampToCalendar(tweet.timestamp)));
-        if (tweet.content.length() == 0) {
-            holder.textContent.setVisibility(View.GONE);
-        } else {
-            holder.textContent.setVisibility(View.VISIBLE);
-            holder.textContent.setText(replaceUsernameWithNicknameInContent(tweet.content));
-        }
-
-        holder.buttonRetweet.setText(String.valueOf(tweet.retweetedCount));
-        holder.buttonComment.setText(String.valueOf(tweet.commentedCount));
+        showTweetContent(holder, tweet);
 
         if (tweet.hasSourceTweet) {
             showSourceTweet(holder, tweet.sourceTweet);
@@ -121,13 +109,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
             imageUrls = tweet.sourceTweet.images;
         }
         if (hasImages) {
-            if (imageUrls.size() == 1) {
-                loadSingleImage(holder, imageUrls.get(0));
-                hideMultipleImages(holder);
-            } else {
-                loadMultipleImages(holder, imageUrls);
-                hideSingleImage(holder);
-            }
+            showTweetImages(holder, imageUrls);
         } else {
             hideAllImages(holder);
         }
@@ -158,24 +140,52 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
 
     private SpannableStringBuilder replaceUsernameWithNicknameInContent(String originalContent) {
         SpannableStringBuilder builder = new SpannableStringBuilder(originalContent);
+        return replaceUsernameWithNicknameInContent(builder);
+    }
 
+
+    private SpannableStringBuilder replaceUsernameWithNicknameInContent(SpannableStringBuilder originalContent) {
         for (LinkedHashMap.Entry<String, String> entry : userList.entrySet()) {
             int lastPosition = 0;
-            int start = builder.toString().indexOf("@" + entry.getKey(), lastPosition);
+            int start = originalContent.toString().indexOf("@" + entry.getKey(), lastPosition);
             while (start >= 0) {
                 int end = start + entry.getKey().length() + 1;
-                builder.replace(start, end, entry.getValue());
+                originalContent.replace(start, end, entry.getValue());
 
                 int spanStart = start;
                 int spanEnd = spanStart + entry.getValue().length();
-                builder.setSpan(new StyleSpan(Typeface.BOLD), spanStart, spanEnd, 0);
+                originalContent.setSpan(new StyleSpan(Typeface.BOLD), spanStart, spanEnd, 0);
 
                 lastPosition = spanEnd;
-                start = builder.toString().indexOf("@" + entry.getKey(), lastPosition);
+                start = originalContent.toString().indexOf("@" + entry.getKey(), lastPosition);
             }
         }
 
-        return builder;
+        return originalContent;
+    }
+
+
+    private void showTweetContent(TweetViewHolder holder, Tweet tweet) {
+        holder.imageAvatar.setImageURI(Uri.parse(
+                imageUtil.parseImageUrl(tweet.user.avatarUrl)
+        ));
+        holder.textNickName.setText(tweet.user.nickName);
+        holder.textTime.setText(TimeUtil.getDescription(context,
+                TimeUtil.convertTimestampToCalendar(tweet.timestamp)));
+        if (tweet.content.length() == 0) {
+            holder.textContent.setVisibility(View.GONE);
+        } else {
+            holder.textContent.setVisibility(View.VISIBLE);
+            holder.textContent.setText(
+                    replaceUsernameWithNicknameInContent(
+                            TextUtil.addLinkToUrlsInText(context, tweet.originalContent, false)
+                    )
+            );
+            holder.textContent.setMovementMethod(new LinkMovementMethod());
+        }
+
+        holder.buttonRetweet.setText(String.valueOf(tweet.retweetedCount));
+        holder.buttonComment.setText(String.valueOf(tweet.commentedCount));
     }
 
 
@@ -200,7 +210,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
             textSourceTweetContent.setVisibility(View.GONE);
         } else {
             textSourceTweetContent.setVisibility(View.VISIBLE);
-            textSourceTweetContent.setText(replaceUsernameWithNicknameInContent(sourceTweet.content));
+            textSourceTweetContent.setText(replaceUsernameWithNicknameInContent(
+                    replaceUsernameWithNicknameInContent(
+                            TextUtil.addLinkToUrlsInText(context, sourceTweet.originalContent, false)
+                    )
+            ));
+            textSourceTweetContent.setMovementMethod(new LinkMovementMethod());
         }
     }
 
@@ -208,6 +223,17 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     private void hideSourceTweet(TweetViewHolder holder) {
         if (holder.itemView.findViewById(R.id.view_source_tweet) != null) {
             holder.itemView.findViewById(R.id.view_source_tweet).setVisibility(View.GONE);
+        }
+    }
+
+
+    private void showTweetImages(TweetViewHolder holder, List<String> imageUrls) {
+        if (imageUrls.size() == 1) {
+            loadSingleImage(holder, imageUrls.get(0));
+            hideMultipleImages(holder);
+        } else {
+            loadMultipleImages(holder, imageUrls);
+            hideSingleImage(holder);
         }
     }
 
