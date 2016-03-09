@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/TweetDialog"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout style="@style/TweetDialog_Header">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_avatar"
+            style="@style/TweetDialog_Header_Avatar"
+            app:placeholderImage="@color/grey_300"
+            app:roundAsCircle="true"/>
+
+        <TextView
+            android:id="@+id/text_nickname"
+            style="@style/TweetDialog_Header_Nickname"
+            tools:text="Title"/>
+
+        <TextView
+            android:id="@+id/text_username"
+            style="@style/TweetDialog_Header_Username"
+            android:layout_below="@id/text_nickname"
+            tools:text="Subhead"/>
+
+        <ImageButton
+            android:id="@+id/button_send"
+            style="@style/TweetDialog_Header_SendButton"
+            android:contentDescription="@string/description.button.send"
+            android:src="@drawable/ic_send_black_24dp_54alpha"/>
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/edit_content"
+        style="@style/TweetDialog_EditContent"
+        android:hint="@string/text.hint.edit_tweet"/>
+
+    <!-- TODO: images -->
+
+    <RelativeLayout style="@style/TweetDialog_Actions">
+
+        <ImageButton
+            android:id="@+id/button_add_image"
+            style="@style/TweetDialog_Actions_Button"
+            android:contentDescription="@string/description.button.add_image"
+            android:src="@drawable/ic_image_black_54alpha_24dp"/>
+
+        <ImageButton
+            android:id="@+id/button_add_person"
+            style="@style/TweetDialog_Actions_Button"
+            android:layout_toEndOf="@id/button_add_image"
+            android:contentDescription="@string/description.button.add_image"
+            android:src="@drawable/ic_person_black_54alpha_24dp"/>
+
+        <TextView
+            style="@style/TweetDialog_Actions_WordCount"
+            tools:text="140"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

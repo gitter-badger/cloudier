@@ -16,7 +16,7 @@
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_avatar"
                 style="@style/TweetCard_Header_Avatar"
-                app:placeholderImage="@android:color/darker_gray"
+                app:placeholderImage="@color/grey_300"
                 app:roundAsCircle="true"/>
 
             <TextView

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TweetDialog">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="TweetDialog_Header">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/spacing_huge</item>
+    </style>
+
+    <style name="TweetDialog_Header_Avatar">
+        <item name="android:layout_width">@dimen/avatar_size_normal</item>
+        <item name="android:layout_height">@dimen/avatar_size_normal</item>
+        <item name="android:layout_marginStart">@dimen/spacing_normal</item>
+        <item name="android:layout_marginTop">@dimen/spacing_normal</item>
+    </style>
+
+    <style name="TweetDialog_Header_Nickname">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/spacing_huge</item>
+        <item name="android:layout_marginTop">14dp</item>
+        <item name="android:paddingTop">@dimen/spacing_xxsmall</item>
+        <item name="android:textAppearance">@style/MaterialText.Body2</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TweetDialog_Header_Username">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/spacing_huge</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:textAppearance">@style/MaterialText.Body1</item>
+        <item name="android:textColor">@color/black_54alpha</item>
+    </style>
+
+    <style name="TweetDialog_Header_SendButton">
+        <item name="android:layout_width">@dimen/spacing_xlarge</item>
+        <item name="android:layout_height">@dimen/spacing_xlarge</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_marginEnd">@dimen/spacing_normal</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="TweetDialog_EditContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">160dp</item>
+        <item name="android:layout_marginStart">@dimen/spacing_normal</item>
+        <item name="android:layout_marginEnd">@dimen/spacing_normal</item>
+        <item name="android:gravity">top|start</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:textAppearance">@style/MaterialText.Body1</item>
+    </style>
+
+    <style name="TweetDialog_Actions">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/spacing_xxlarge</item>
+        <item name="android:layout_marginTop">@dimen/spacing_normal</item>
+        <item name="android:background">@color/grey_300</item>
+    </style>
+
+    <style name="TweetDialog_Actions_Button">
+        <item name="android:layout_width">@dimen/spacing_xlarge</item>
+        <item name="android:layout_height">@dimen/spacing_xlarge</item>
+        <item name="android:layout_marginTop">@dimen/spacing_xsmall</item>
+        <item name="android:layout_marginStart">@dimen/spacing_xsmall</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="TweetDialog_Actions_WordCount">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_marginEnd">@dimen/spacing_normal</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textAppearance">@style/MaterialText.Body1</item>
+    </style>
+
+</resources>
