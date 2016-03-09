@@ -46,14 +46,21 @@
             android:inflatedId="@+id/view_source_tweet"
             android:layout="@layout/stub_tweet_source"/>
 
-        <!-- Image(s) -->
-        <!-- TODO: Edit for multiple images. -->
+        <!-- Single Image -->
         <ViewStub
-            android:id="@+id/stub_image"
+            android:id="@+id/stub_single_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inflatedId="@+id/image_image"
-            android:layout="@layout/stub_tweet_image"/>
+            android:inflatedId="@+id/view_single_image"
+            android:layout="@layout/stub_tweet_single_image"/>
+
+        <!-- Image -->
+        <ViewStub
+            android:id="@+id/stub_images"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/view_images"
+            android:layout="@layout/stub_tweet_images"/>
 
         <!-- Actions -->
         <RelativeLayout

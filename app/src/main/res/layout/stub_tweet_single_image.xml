@@ -2,5 +2,5 @@
 <com.facebook.drawee.view.SimpleDraweeView
     style="@style/TweetCard_Image"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:placeholderImage="@android:color/darker_gray"
+    app:placeholderImage="@color/grey_300"
     app:viewAspectRatio="1.78"/>

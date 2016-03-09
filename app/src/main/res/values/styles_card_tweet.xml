@@ -35,7 +35,6 @@
         <item name="android:layout_marginTop">14dp</item>
         <item name="android:paddingTop">@dimen/spacing_xxsmall</item>
         <item name="android:textAppearance">@style/MaterialText.Body2</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TweetCard_Header_Time">
@@ -47,10 +46,22 @@
         <item name="android:textColor">@color/black_54alpha</item>
     </style>
 
-    <!-- TODO: This is a demo style for only 1 image. Should be edited for multiple images. -->
     <style name="TweetCard_Image">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TweetCard_ImageList">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:scrollbars">horizontal</item>
+    </style>
+
+    <style name="TweetCard_ImageList_Image">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">160dp</item>
+        <item name="android:layout_marginEnd">@dimen/spacing_small</item>
     </style>
 
     <style name="TweetCard_Content">

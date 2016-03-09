@@ -4,26 +4,27 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import net.kyouko.cloudier.R;
 import net.kyouko.cloudier.model.AppMessage;
+import net.kyouko.cloudier.model.SourceTweet;
 import net.kyouko.cloudier.model.TimelineEntry;
 import net.kyouko.cloudier.model.Tweet;
 import net.kyouko.cloudier.util.ImageUtil;
 import net.kyouko.cloudier.util.TimeUtil;
 
-import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -98,7 +99,72 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
 
 
     private void bindMessageCardHolder(MessageViewHolder holder, AppMessage message) {
-        //
+        // TODO: show app messages
+    }
+
+
+    private void bindTweetCardHolder(TweetViewHolder holder, Tweet tweet) {
+        holder.imageAvatar.setImageURI(Uri.parse(
+                imageUtil.parseImageUrl(tweet.user.avatarUrl)
+        ));
+        holder.textNickName.setText(tweet.user.nickName);
+        holder.textTime.setText(TimeUtil.getDescription(context,
+                TimeUtil.convertTimestampToCalendar(tweet.timestamp)));
+        holder.textContent.setText(replaceUsernameWithNicknameInContent(tweet.content));
+
+        holder.buttonRetweet.setText(String.valueOf(tweet.retweetedCount));
+        holder.buttonComment.setText(String.valueOf(tweet.commentedCount));
+
+        if (tweet.hasSourceTweet) {
+            showSourceTweet(holder, tweet.sourceTweet);
+        } else {
+            hideSourceTweet(holder);
+        }
+
+        boolean hasImages = false;
+        List<String> imageUrls = null;
+        if (tweet.images.size() > 0) {
+            hasImages = true;
+            imageUrls = tweet.images;
+        } else if (tweet.hasSourceTweet && tweet.sourceTweet.images.size() > 0) {
+            hasImages = true;
+            imageUrls = tweet.sourceTweet.images;
+        }
+        if (hasImages) {
+            if (imageUrls.size() == 1) {
+                loadSingleImage(holder, imageUrls.get(0));
+                hideMultipleImages(holder);
+            } else {
+                loadMultipleImages(holder, imageUrls);
+                hideSingleImage(holder);
+            }
+        } else {
+            hideAllImages(holder);
+        }
+    }
+
+
+    private void bindLoadMoreViewHolder(LoadMoreViewHolder holder) {
+        // TODO: add a "load more" button
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        TimelineEntry entry = entries.get(position);
+        if (entry instanceof AppMessage) {
+            return TYPE_MESSAGE;
+        } else if (entry instanceof Tweet) {
+            return TYPE_TWEET;
+        } else {
+            return TYPE_TWEET;
+        }
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return entries.size();
     }
 
 
@@ -120,6 +186,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         return builder;
     }
 
+
     private String areplaceUsernameWithNicknameInContent(String originalContent) {
         String content = originalContent;
 
@@ -131,96 +198,85 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     }
 
 
-    private void bindTweetCardHolder(TweetViewHolder holder, Tweet tweet) {
-        holder.imageAvatar.setImageURI(Uri.parse(
-                imageUtil.parseImageUrl(tweet.user.avatarUrl)
-        ));
-        holder.textNickName.setText(tweet.user.nickName);
-        Log.i("Time", TimeUtil.convertTimestampToCalendar(tweet.timestamp).toString());
-        Log.i("Now", new GregorianCalendar().toString());
-        holder.textTime.setText(TimeUtil.getDescription(context,
-                TimeUtil.convertTimestampToCalendar(tweet.timestamp)));
-        holder.textContent.setText(replaceUsernameWithNicknameInContent(tweet.content));
+    private void showSourceTweet(TweetViewHolder holder, SourceTweet sourceTweet) {
+        View viewSourceTweet;
 
-        holder.buttonRetweet.setText(String.valueOf(tweet.retweetedCount));
-        holder.buttonComment.setText(String.valueOf(tweet.commentedCount));
-
-        if (tweet.hasSourceTweet) {
-            View viewSourceTweet;
-
-            if (holder.itemView.findViewById(R.id.view_source_tweet) != null) {
-                viewSourceTweet = holder.itemView.findViewById(R.id.view_source_tweet);
-                viewSourceTweet.setVisibility(View.VISIBLE);
-            } else {
-                viewSourceTweet = holder.stubSourceTweet.inflate();
-            }
-
-            TextView textSourceTweetNickname = (TextView) viewSourceTweet.findViewById(R.id.text_source_nickname);
-            TextView textSourceTweetTime = (TextView) viewSourceTweet.findViewById(R.id.text_source_time);
-            TextView textSourceTweetContent = (TextView) viewSourceTweet.findViewById(R.id.text_source_content);
-
-            textSourceTweetNickname.setText(tweet.sourceTweet.user.nickName);
-            textSourceTweetTime.setText(TimeUtil.getDescription(context,
-                    TimeUtil.convertTimestampToCalendar(tweet.sourceTweet.timestamp)));
-            textSourceTweetContent.setText(replaceUsernameWithNicknameInContent(tweet.sourceTweet.content));
+        if (holder.itemView.findViewById(R.id.view_source_tweet) != null) {
+            viewSourceTweet = holder.itemView.findViewById(R.id.view_source_tweet);
+            viewSourceTweet.setVisibility(View.VISIBLE);
         } else {
-            if (holder.itemView.findViewById(R.id.view_source_tweet) != null) {
-                View viewSourceTweet = holder.itemView.findViewById(R.id.view_source_tweet);
-                viewSourceTweet.setVisibility(View.GONE);
-            }
+            viewSourceTweet = holder.stubSourceTweet.inflate();
         }
 
-        // TODO: display multiple images
-        if (tweet.images.size() > 0) {
-            SimpleDraweeView image;
+        TextView textSourceTweetNickname = (TextView) viewSourceTweet.findViewById(R.id.text_source_nickname);
+        TextView textSourceTweetTime = (TextView) viewSourceTweet.findViewById(R.id.text_source_time);
+        TextView textSourceTweetContent = (TextView) viewSourceTweet.findViewById(R.id.text_source_content);
 
-            if (holder.itemView.findViewById(R.id.image_image) != null) {
-                image = (SimpleDraweeView) holder.itemView.findViewById(R.id.image_image);
-            } else {
-                image = (SimpleDraweeView) holder.stubImage.inflate();
-            }
+        textSourceTweetNickname.setText(sourceTweet.user.nickName);
+        textSourceTweetTime.setText(TimeUtil.getDescription(context,
+                TimeUtil.convertTimestampToCalendar(sourceTweet.timestamp)));
+        textSourceTweetContent.setText(replaceUsernameWithNicknameInContent(sourceTweet.content));
+    }
 
-            image.setImageURI(Uri.parse(ImageUtil.getInstance(context).parseImageUrl(tweet.images.get(0))));
-        } else if (tweet.hasSourceTweet && tweet.sourceTweet.images.size() > 0) {
-            SimpleDraweeView image;
 
-            if (holder.itemView.findViewById(R.id.image_image) != null) {
-                image = (SimpleDraweeView) holder.itemView.findViewById(R.id.image_image);
-            } else {
-                image = (SimpleDraweeView) holder.stubImage.inflate();
-            }
-
-            image.setImageURI(Uri.parse(ImageUtil.getInstance(context).parseImageUrl(tweet.sourceTweet.images.get(0))));
-        } else {
-            if (holder.itemView.findViewById(R.id.image_image) != null) {
-                SimpleDraweeView image = (SimpleDraweeView) holder.itemView.findViewById(R.id.image_image);
-                image.setVisibility(View.GONE);
-            }
+    private void hideSourceTweet(TweetViewHolder holder) {
+        if (holder.itemView.findViewById(R.id.view_source_tweet) != null) {
+            holder.itemView.findViewById(R.id.view_source_tweet).setVisibility(View.GONE);
         }
     }
 
 
-    private void bindLoadMoreViewHolder(LoadMoreViewHolder holder) {
-        //
+    private void loadSingleImage(TweetViewHolder holder, String imageUrl) {
+        View viewImage;
+
+        if (holder.itemView.findViewById(R.id.view_single_image) != null) {
+            viewImage = holder.itemView.findViewById(R.id.view_single_image);
+            viewImage.setVisibility(View.VISIBLE);
+        } else {
+            viewImage = holder.stubSingleImage.inflate();
+        }
+
+        ((SimpleDraweeView) viewImage).setImageURI(Uri.parse(ImageUtil.getInstance(context).parseImageUrl(imageUrl)));
     }
 
 
-    @Override
-    public int getItemViewType(int position) {
-        TimelineEntry entry = entries.get(position);
-        if (entry instanceof AppMessage) {
-            return TYPE_MESSAGE;
-        } else if (entry instanceof Tweet) {
-            return TYPE_TWEET;
+    private void loadMultipleImages(TweetViewHolder holder, List<String> imageUrls) {
+        View viewImage;
+
+        if (holder.itemView.findViewById(R.id.view_images) != null) {
+            viewImage = holder.itemView.findViewById(R.id.view_images);
+            viewImage.setVisibility(View.VISIBLE);
         } else {
-            return TYPE_TWEET;
+            viewImage = holder.stubImage.inflate();
+        }
+
+        LinearLayout layoutImagesList = (LinearLayout) viewImage.findViewById(R.id.layout_image_list);
+        layoutImagesList.removeAllViewsInLayout();
+        for (String imageUrl : imageUrls) {
+            SimpleDraweeView image = (SimpleDraweeView) LayoutInflater.from(context).inflate(R.layout.template_tweet_image, layoutImagesList, false);
+            image.setImageURI(Uri.parse(ImageUtil.getInstance(context).parseImageUrl(imageUrl)));
+            layoutImagesList.addView(image, 0);
         }
     }
 
 
-    @Override
-    public int getItemCount() {
-        return entries.size();
+    private void hideSingleImage(TweetViewHolder holder) {
+        if (holder.itemView.findViewById(R.id.view_single_image) != null) {
+            holder.itemView.findViewById(R.id.view_single_image).setVisibility(View.GONE);
+        }
+    }
+
+
+    private void hideMultipleImages(TweetViewHolder holder) {
+        if (holder.itemView.findViewById(R.id.view_images) != null) {
+            holder.itemView.findViewById(R.id.view_images).setVisibility(View.GONE);
+        }
+    }
+
+
+    private void hideAllImages(TweetViewHolder holder) {
+        hideSingleImage(holder);
+        hideMultipleImages(holder);
     }
 
 
@@ -255,7 +311,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         TextView textNickName;
         @Bind(R.id.text_time)
         TextView textTime;
-        @Bind(R.id.stub_image)
+        @Bind(R.id.stub_single_image)
+        ViewStub stubSingleImage;
+        @Bind(R.id.stub_images)
         ViewStub stubImage;
         @Bind(R.id.text_content)
         TextView textContent;

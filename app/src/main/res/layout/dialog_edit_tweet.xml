@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout style="@style/TweetDialog_Header">
+    <RelativeLayout
+        style="@style/TweetDialog_Header">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/image_avatar"
@@ -39,7 +40,8 @@
 
     <!-- TODO: images -->
 
-    <RelativeLayout style="@style/TweetDialog_Actions">
+    <RelativeLayout
+        style="@style/TweetDialog_Actions">
 
         <ImageButton
             android:id="@+id/button_add_image"
@@ -55,6 +57,7 @@
             android:src="@drawable/ic_person_black_54alpha_24dp"/>
 
         <TextView
+            android:id="@+id/text_word_count"
             style="@style/TweetDialog_Actions_WordCount"
             tools:text="140"/>
 

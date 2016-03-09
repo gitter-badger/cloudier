@@ -13,6 +13,7 @@ import net.kyouko.cloudier.model.BaseTweet;
 import net.kyouko.cloudier.model.SourceTweet;
 import net.kyouko.cloudier.model.Timeline;
 import net.kyouko.cloudier.model.Tweet;
+import net.kyouko.cloudier.model.TweetId;
 import net.kyouko.cloudier.model.User;
 
 import org.json.JSONArray;
@@ -58,6 +59,23 @@ public class RequestUtil {
         }
 
         return url;
+    }
+
+
+    public static Params generatePostRequestParams(Context context, Params originalParams) {
+        Params params = new Params();
+
+        Account account = AccountUtil.readAccount(context);
+        params.put("oauth_consumer_key", Config.TENCENT_APP_KEY);
+        params.put("access_token", account.accessToken);
+        params.put("openid", account.openId);
+        params.put("clientip", NetworkUtil.getIpAddress());
+        params.put("oauth_version", "2.a");
+        params.put("scope", "all");
+
+        params.putAll(originalParams);
+
+        return params;
     }
 
 
@@ -118,6 +136,27 @@ public class RequestUtil {
         }
 
         return timeline;
+    }
+
+
+    public static TweetId parseTweetIdFromResponse(JSONObject response) throws RequestError {
+        RequestError requestError = getRequestErrorFromResponse(response);
+        if (requestError != null) {
+            throw requestError;
+        }
+
+        TweetId tweetId = new TweetId();
+
+        try {
+            JSONObject tweetIdObject = response.getJSONObject("data");
+
+            tweetId.id = tweetIdObject.getLong("id");
+            tweetId.timestamp = tweetIdObject.getLong("time");
+        } catch (JSONException ex) {
+            throw RequestError.createJsonError(ex);
+        }
+
+        return tweetId;
     }
 
 

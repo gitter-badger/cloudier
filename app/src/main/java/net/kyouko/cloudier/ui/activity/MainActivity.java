@@ -1,5 +1,6 @@
 package net.kyouko.cloudier.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -10,9 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,10 +25,13 @@ import net.kyouko.cloudier.api.RequestError;
 import net.kyouko.cloudier.api.RequestErrorListener;
 import net.kyouko.cloudier.api.RequestSuccessListener;
 import net.kyouko.cloudier.api.timeline.HomeTimelineRequest;
+import net.kyouko.cloudier.api.tweet.SendTweetRequest;
 import net.kyouko.cloudier.model.Account;
 import net.kyouko.cloudier.model.Timeline;
 import net.kyouko.cloudier.model.TimelineEntry;
+import net.kyouko.cloudier.model.TweetId;
 import net.kyouko.cloudier.ui.adapter.TimelineAdapter;
+import net.kyouko.cloudier.ui.dialog.EditTweetDialog;
 import net.kyouko.cloudier.util.AccountUtil;
 import net.kyouko.cloudier.util.RequestUtil;
 
@@ -43,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
 
     private final static int ACTION_USER_AUTH = 0;
     private final static String TAG_REQUESTS = "REQUEST_MAIN";
+    private final static String TAG_EDIT_TWEET_DIALOG = "EDIT_TWEET_DIALOG";
 
 
     @Bind(R.id.coordinator)
@@ -119,8 +126,21 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                final EditTweetDialog editTweetDialog = new EditTweetDialog();
+                editTweetDialog.setOnEditFinishedListener(new EditTweetDialog.OnEditFinishedListener() {
+                    @Override
+                    public void onEditFinished(String content) {
+                        if (content.length() != 0) {
+                            editTweetDialog.dismiss();
+                            sendTweet(content);
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.text_info_empty_content),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                editTweetDialog.show(getSupportFragmentManager(), TAG_EDIT_TWEET_DIALOG);
             }
         });
     }
@@ -196,6 +216,38 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
         for (String username : usernames) {
             timelineUserList.put(username, originalUserList.get(username));
         }
+    }
+
+
+    private void sendTweet(String content) {
+        final ProgressDialog progressDialog = ProgressDialog.show(this, "",
+                getString(R.string.text_progress_sending_tweet), true);
+
+        new SendTweetRequest(this, content, new RequestSuccessListener<TweetId>() {
+            @Override
+            public void onRequestSuccess(TweetId result) {
+                progressDialog.dismiss();
+                Snackbar.make(coordinatorLayout, getString(R.string.text_info_tweet_send_success),
+                        Snackbar.LENGTH_SHORT).show();
+            }
+        }, new RequestErrorListener() {
+            @Override
+            public void onRequestError(RequestError error) {
+                progressDialog.dismiss();
+                Log.e("Error", error.getLocalizedMessage());
+                Snackbar.make(coordinatorLayout, getString(R.string.text_info_tweet_send_fail),
+                        Snackbar.LENGTH_SHORT)
+                        .setAction(getString(R.string.title_action_resend),
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        // TODO: resend after fail
+                                        Toast.makeText(getApplicationContext(), "Coming soon", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                        ).show();
+            }
+        }).execute();
     }
 
 

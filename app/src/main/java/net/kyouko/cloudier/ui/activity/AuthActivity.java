@@ -117,7 +117,7 @@ public class AuthActivity extends AppCompatActivity implements RequestActivity {
                         AccountUtil.saveAccount(context, account);
 
                         Toast.makeText(getApplicationContext(),
-                                getString(R.string.text_toast_auth_succeeded),
+                                getString(R.string.text_info_auth_succeeded),
                                 Toast.LENGTH_SHORT).show();
 
                         setResult(RESULT_OK);
@@ -130,7 +130,7 @@ public class AuthActivity extends AppCompatActivity implements RequestActivity {
                         progressDialog.dismiss();
 
                         Toast.makeText(getApplicationContext(),
-                                getString(R.string.text_toast_auth_succeeded),
+                                getString(R.string.text_info_auth_succeeded),
                                 Toast.LENGTH_SHORT).show();
 
                         setResult(RESULT_OK);
