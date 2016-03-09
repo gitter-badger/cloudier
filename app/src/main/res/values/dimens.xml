@@ -12,6 +12,7 @@
     <dimen name="spacing_huge">72dp</dimen>
 
     <!-- Elevations -->
+    <dimen name="elevation_toolbar">4dp</dimen>
     <dimen name="elevation_card_normal">4dp</dimen>
     <dimen name="elevation_fab_normal">6dp</dimen>
     <dimen name="elevation_fab_pressed">12dp</dimen>
