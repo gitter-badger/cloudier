@@ -110,7 +110,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         holder.textNickName.setText(tweet.user.nickName);
         holder.textTime.setText(TimeUtil.getDescription(context,
                 TimeUtil.convertTimestampToCalendar(tweet.timestamp)));
-        holder.textContent.setText(replaceUsernameWithNicknameInContent(tweet.content));
+        if (tweet.content.length() == 0) {
+            holder.textContent.setVisibility(View.GONE);
+        } else {
+            holder.textContent.setVisibility(View.VISIBLE);
+            holder.textContent.setText(replaceUsernameWithNicknameInContent(tweet.content));
+        }
 
         holder.buttonRetweet.setText(String.valueOf(tweet.retweetedCount));
         holder.buttonComment.setText(String.valueOf(tweet.commentedCount));
@@ -215,7 +220,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         textSourceTweetNickname.setText(sourceTweet.user.nickName);
         textSourceTweetTime.setText(TimeUtil.getDescription(context,
                 TimeUtil.convertTimestampToCalendar(sourceTweet.timestamp)));
-        textSourceTweetContent.setText(replaceUsernameWithNicknameInContent(sourceTweet.content));
+        if (sourceTweet.content.length() == 0) {
+            textSourceTweetContent.setVisibility(View.GONE);
+        } else {
+            textSourceTweetContent.setVisibility(View.VISIBLE);
+            textSourceTweetContent.setText(replaceUsernameWithNicknameInContent(sourceTweet.content));
+        }
     }
 
 
