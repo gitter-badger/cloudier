@@ -255,7 +255,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         for (String imageUrl : imageUrls) {
             SimpleDraweeView image = (SimpleDraweeView) LayoutInflater.from(context).inflate(R.layout.template_tweet_image, layoutImagesList, false);
             image.setImageURI(Uri.parse(ImageUtil.getInstance(context).parseImageUrl(imageUrl)));
-            layoutImagesList.addView(image, 0);
+            layoutImagesList.addView(image);
         }
     }
 
