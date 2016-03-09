@@ -20,9 +20,8 @@
 
     <style name="LoadMoreButton_Wrapper">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/spacing_small</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:padding">@dimen/spacing_normal</item>
     </style>
 
     <style name="LoadMoreButton_Text">
@@ -31,6 +30,12 @@
         <item name="android:layout_centerInParent">true</item>
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
+    </style>
+    
+    <style name="LoadMoreButton_Progress" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_width">@dimen/avatar_size_normal</item>
+        <item name="android:layout_height">@dimen/avatar_size_normal</item>
+        <item name="android:layout_centerInParent">true</item>
     </style>
 
 </resources>

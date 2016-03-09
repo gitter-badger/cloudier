@@ -17,4 +17,14 @@ public class Timeline {
     public List<Tweet> tweets = new ArrayList<>();
     public Map<String, String> userList = new HashMap<>();
 
+
+    public boolean containsTweet(Tweet tweet) {
+        for (Tweet t : tweets) {
+            if (tweet.id.equals(t.id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

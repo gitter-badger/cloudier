@@ -1,7 +1,6 @@
 package net.kyouko.cloudier.ui.activity;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -28,13 +27,13 @@ import net.kyouko.cloudier.api.RequestSuccessListener;
 import net.kyouko.cloudier.api.timeline.HomeTimelineRequest;
 import net.kyouko.cloudier.api.tweet.SendTweetRequest;
 import net.kyouko.cloudier.model.Account;
+import net.kyouko.cloudier.model.LoadMoreModel;
 import net.kyouko.cloudier.model.Timeline;
 import net.kyouko.cloudier.model.TimelineEntry;
 import net.kyouko.cloudier.model.TweetId;
 import net.kyouko.cloudier.ui.adapter.TimelineAdapter;
 import net.kyouko.cloudier.ui.dialog.EditTweetDialog;
 import net.kyouko.cloudier.util.AccountUtil;
-import net.kyouko.cloudier.util.PreferenceUtil;
 import net.kyouko.cloudier.util.RequestUtil;
 
 import java.util.ArrayList;
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
     @Bind(R.id.fab)
     FloatingActionButton fab;
 
-    private Context context;
     private RequestQueue requestQueue;
     private Account currentAccount;
     private TimelineAdapter adapter;
@@ -78,8 +76,6 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        context = this;
 
         initView();
         initRequestQueue();
@@ -112,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchHomeTimeline();
+                fetchLatestHomeTimeline();
             }
         });
     }
@@ -123,6 +119,12 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         adapter = new TimelineAdapter(this, timelineEntries, timelineUserList);
+        adapter.setOnLoadMoreTweetsListener(new TimelineAdapter.OnLoadMoreTweetsListener() {
+            @Override
+            public void onLoadMoreTweets() {
+                fetchMoreHomeTimeline();
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
@@ -185,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
                         timeline = result;
                         timelineEntries.clear();
                         timelineEntries.addAll(timeline.tweets);
+                        timelineEntries.add(new LoadMoreModel());
 
                         sortUserListDesc(timeline.userList);
 
@@ -195,6 +198,86 @@ public class MainActivity extends AppCompatActivity implements RequestActivity {
                     @Override
                     public void onRequestError(RequestError error) {
                         swipeRefreshLayout.setRefreshing(false);
+
+                        Snackbar.make(coordinatorLayout,
+                                getString(R.string.text_info_error),
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+        ).execute();
+    }
+
+
+    private void fetchLatestHomeTimeline() {
+        new HomeTimelineRequest(this,
+                new RequestSuccessListener<Timeline>() {
+                    @Override
+                    public void onRequestSuccess(Timeline result) {
+                        swipeRefreshLayout.setRefreshing(false);
+
+                        if (result.tweets.get(0).id.equals(timeline.tweets.get(0).id)) {
+                            Snackbar.make(coordinatorLayout,
+                                    getString(R.string.text_info_no_new_tweet),
+                                    Snackbar.LENGTH_SHORT).show();
+                        } else if (!timeline.containsTweet(result.tweets.get(result.tweets.size() - 1))) {
+                            timeline = result;
+                        } else {
+                            for (int i = result.tweets.size() - 2; i >= 0; i -= 1) {
+                                if (!timeline.containsTweet(result.tweets.get(i))) {
+                                    timeline.tweets.add(0, result.tweets.get(i));
+                                    timeline.userList.putAll(result.userList);
+                                }
+                            }
+                        }
+
+                        timelineEntries.clear();
+                        timelineEntries.addAll(timeline.tweets);
+                        timelineEntries.add(new LoadMoreModel());
+
+                        sortUserListDesc(timeline.userList);
+
+                        adapter.notifyDataSetChanged();
+                    }
+                },
+                new RequestErrorListener() {
+                    @Override
+                    public void onRequestError(RequestError error) {
+                        swipeRefreshLayout.setRefreshing(false);
+
+                        Snackbar.make(coordinatorLayout,
+                                getString(R.string.text_info_error),
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+        ).execute();
+    }
+
+
+    private void fetchMoreHomeTimeline() {
+        new HomeTimelineRequest(this, HomeTimelineRequest.PAGE_FLAG_DOWN,
+                timeline.tweets.get(timeline.tweets.size() - 1).timestamp,
+                new RequestSuccessListener<Timeline>() {
+                    @Override
+                    public void onRequestSuccess(Timeline result) {
+                        timeline.tweets.addAll(result.tweets);
+
+                        timelineEntries.clear();
+                        timelineEntries.addAll(timeline.tweets);
+                        timelineEntries.add(new LoadMoreModel());
+
+                        timeline.userList.putAll(result.userList);
+                        sortUserListDesc(timeline.userList);
+
+                        adapter.notifyDataSetChanged();
+                        adapter.completeLoadingMore();
+                    }
+                },
+                new RequestErrorListener() {
+                    @Override
+                    public void onRequestError(RequestError error) {
+                        Snackbar.make(coordinatorLayout,
+                                getString(R.string.text_info_error),
+                                Snackbar.LENGTH_SHORT).show();
                     }
                 }
         ).execute();

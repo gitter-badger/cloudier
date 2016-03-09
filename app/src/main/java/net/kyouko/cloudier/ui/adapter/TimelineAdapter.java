@@ -1,5 +1,7 @@
 package net.kyouko.cloudier.ui.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -38,15 +41,23 @@ import butterknife.ButterKnife;
  */
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseViewHolder> {
 
+    public interface OnLoadMoreTweetsListener {
+        void onLoadMoreTweets();
+    }
 
-    private final static int TYPE_MESSAGE = 0;
-    private final static int TYPE_TWEET = 1;
-    private final static int TYPE_LOAD_MORE = 2;
+
+    private final static int TYPE_TWEET = 0;
+    private final static int TYPE_LOAD_MORE = 1;
 
     private Context context;
     private List<TimelineEntry> entries;
     private LinkedHashMap<String, String> userList;
     private ImageUtil imageUtil;
+
+    private OnLoadMoreTweetsListener onLoadMoreTweetsListener;
+    private LoadMoreViewHolder loadMoreViewHolder;
+
+    private int shortAnimationDuration;
 
 
     public TimelineAdapter(Context context, List<TimelineEntry> entries, LinkedHashMap<String, String> userList) {
@@ -55,6 +66,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         this.userList = userList;
 
         imageUtil = ImageUtil.getInstance(context);
+
+        shortAnimationDuration = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
     }
 
 
@@ -70,8 +83,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
 
             case TYPE_LOAD_MORE:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.card_tweet, parent, false);
-                return new TweetViewHolder(view);
+                        .inflate(R.layout.view_load_more, parent, false);
+                return new LoadMoreViewHolder(view);
         }
     }
 
@@ -116,8 +129,15 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     }
 
 
-    private void bindLoadMoreViewHolder(LoadMoreViewHolder holder) {
-        // TODO: add a "load more" button
+    private void bindLoadMoreViewHolder(final LoadMoreViewHolder holder) {
+        loadMoreViewHolder = holder;
+
+        holder.buttonLoadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadMoreTweets(holder);
+            }
+        });
     }
 
 
@@ -127,7 +147,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         if (entry instanceof Tweet) {
             return TYPE_TWEET;
         } else {
-            return TYPE_TWEET;
+            return TYPE_LOAD_MORE;
         }
     }
 
@@ -292,6 +312,49 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     }
 
 
+    private void loadMoreTweets(final LoadMoreViewHolder holder) {
+        if (onLoadMoreTweetsListener != null) {
+            holder.buttonLoadMore.setClickable(false);
+
+            holder.progressBar.setAlpha(0f);
+            holder.progressBar.setVisibility(View.VISIBLE);
+
+            holder.progressBar.animate()
+                    .alpha(1f)
+                    .setDuration(shortAnimationDuration)
+                    .setListener(null);
+
+            holder.buttonLoadMore.animate()
+                    .alpha(0f)
+                    .setDuration(shortAnimationDuration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            holder.buttonLoadMore.setVisibility(View.GONE);
+                            holder.buttonLoadMore.setClickable(true);
+
+                            onLoadMoreTweetsListener.onLoadMoreTweets();
+                        }
+                    });
+        }
+    }
+
+
+    public void completeLoadingMore() {
+        if (loadMoreViewHolder != null) {
+            loadMoreViewHolder.progressBar.setVisibility(View.GONE);
+
+            loadMoreViewHolder.buttonLoadMore.setAlpha(1f);
+            loadMoreViewHolder.buttonLoadMore.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    public void setOnLoadMoreTweetsListener(OnLoadMoreTweetsListener listener) {
+        onLoadMoreTweetsListener = listener;
+    }
+
+
     /**
      * Base class for real holders of the recycler view.
      */
@@ -336,10 +399,23 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
     }
 
 
+    /**
+     * View holder for views of loading more.
+     */
     public static class LoadMoreViewHolder extends BaseViewHolder {
+
+        @Bind(R.id.button_load_more)
+        View buttonLoadMore;
+        @Bind(R.id.progress_load_more)
+        ProgressBar progressBar;
+
+
         public LoadMoreViewHolder(View itemView) {
             super(itemView);
+
+            ButterKnife.bind(this, itemView);
         }
+
     }
 
 }

@@ -37,6 +37,8 @@
     <string name="text.info.empty_content">Write something please</string>
     <string name="text.info.tweet_send_success">Tweet sent successfully</string>
     <string name="text.info.tweet_send_fail">Failed to send tweet</string>
+    <string name="text.info.no_new_tweet">No new tweet</string>
+    <string name="text.info.error">Error: %s</string>
 
     <string name="text.hint.edit_tweet">Write something …</string>
 
