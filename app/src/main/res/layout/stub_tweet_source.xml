@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    style="@style/TweetCard_Source"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/text_source_nickname"
+        style="@style/TweetCard_Source_Nickname"
+        tools:text="Title"/>
+
+    <TextView
+        android:id="@+id/text_source_time"
+        style="@style/TweetCard_Source_Time"
+        android:layout_toEndOf="@id/text_source_nickname"
+        tools:text="2 hours ago"/>
+
+    <TextView
+        android:id="@+id/text_source_content"
+        style="@style/TweetCard_Source_Content"
+        android:layout_below="@id/text_source_nickname"
+        tools:text="Greyhound divisively hello coldly wonderfully marginally far upon excluding."/>
+
+</RelativeLayout>

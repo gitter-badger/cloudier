@@ -2,7 +2,10 @@
 <android.support.v7.widget.CardView
     style="@style/MessageCard"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="@dimen/radius_card"
+    app:cardElevation="@dimen/elevation_card_normal">
 
     <LinearLayout
         style="@style/MessageCard_Container">
@@ -14,7 +17,7 @@
             <TextView
                 android:id="@+id/text_title"
                 style="@style/MessageCard_Title_Text"
-                tools:text="Welcome to Cloudier"/>
+                android:text="@string/text.info.welcome"/>
 
         </FrameLayout>
 

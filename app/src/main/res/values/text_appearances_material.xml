@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MaterialText">
+        <item name="android:textColor">@color/black_87alpha</item>
+        <item name="android:textSize">@dimen/text_size_material_body1</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="MaterialText.Body1" parent="MaterialText">
+    </style>
+
+    <style name="MaterialText.Body2" parent="MaterialText">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="MaterialText.Caption" parent="MaterialText">
+        <item name="android:textSize">@dimen/text_size_material_caption</item>
+    </style>
+
+    <style name="MaterialText.Button" parent="MaterialText">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="MaterialText.Title" parent="MaterialText">
+        <item name="android:textSize">@dimen/text_size_material_title</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="MaterialText.Subheading" parent="MaterialText">
+        <item name="android:textSize">@dimen/text_size_material_subheading</item>
+    </style>
+
+    <style name="MaterialText.Headline" parent="MaterialText">
+        <item name="android:textSize">@dimen/text_size_material_headline</item>
+    </style>
+
+    <style name="MaterialText.Display1" parent="MaterialText">
+        <item name="android:textSize">@dimen/text_size_material_display1</item>
+    </style>
+
+    <style name="MaterialText.Display2" parent="MaterialText">
+        <item name="android:textSize">@dimen/text_size_material_display2</item>
+    </style>
+
+    <style name="MaterialText.Display3" parent="MaterialText">
+        <item name="android:textSize">@dimen/text_size_material_display3</item>
+    </style>
+
+    <style name="MaterialText.Display4" parent="MaterialText">
+        <item name="android:textSize">@dimen/text_size_material_display4</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+</resources>

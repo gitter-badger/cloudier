@@ -14,19 +14,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 
 import net.kyouko.cloudier.R;
+import net.kyouko.cloudier.api.RequestError;
+import net.kyouko.cloudier.api.RequestErrorListener;
+import net.kyouko.cloudier.api.RequestSuccessListener;
+import net.kyouko.cloudier.api.timeline.HomeTimelineRequest;
 import net.kyouko.cloudier.model.Account;
+import net.kyouko.cloudier.model.Timeline;
+import net.kyouko.cloudier.model.TimelineEntry;
+import net.kyouko.cloudier.ui.adapter.TimelineAdapter;
 import net.kyouko.cloudier.util.AccountUtil;
+import net.kyouko.cloudier.util.RequestUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RequestActivity {
 
     private final static int ACTION_USER_AUTH = 0;
+    private final static String TAG_REQUESTS = "REQUEST_MAIN";
 
 
     @Bind(R.id.coordinator)
@@ -40,8 +56,12 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.fab)
     FloatingActionButton fab;
 
-    RequestQueue requestQueue;
+    private RequestQueue requestQueue;
     private Account currentAccount;
+    private TimelineAdapter adapter;
+    private Timeline timeline = new Timeline();
+    private List<TimelineEntry> timelineEntries = new ArrayList<>();
+    private LinkedHashMap<String, String> timelineUserList = new LinkedHashMap<>();
 
 
     @Override
@@ -49,11 +69,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        requestQueue = Volley.newRequestQueue(this);
-
         initView();
+        initRequestQueue();
+
         if (!hasAuthorized()) {
             startAuth();
+        } else {
+            fetchHomeTimeline();
         }
     }
 
@@ -78,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Snackbar.make(coordinatorLayout, "Refreshing", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                fetchHomeTimeline();
             }
         });
     }
@@ -88,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
     private void initRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        adapter = new TimelineAdapter(this, timelineEntries, timelineUserList);
+        recyclerView.setAdapter(adapter);
     }
 
 
@@ -119,11 +143,82 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void initRequestQueue() {
+        requestQueue = RequestUtil.getRequestQueue(this);
+        requestQueue.start();
+    }
+
+
+    private void fetchHomeTimeline() {
+        swipeRefreshLayout.setRefreshing(true);
+        new HomeTimelineRequest(this,
+                new RequestSuccessListener<Timeline>() {
+                    @Override
+                    public void onRequestSuccess(Timeline result) {
+                        swipeRefreshLayout.setRefreshing(false);
+
+                        timeline = result;
+                        timelineEntries.clear();
+                        timelineEntries.addAll(timeline.tweets);
+
+                        sortUserListDesc(timeline.userList);
+
+                        adapter.notifyDataSetChanged();
+                    }
+                },
+                new RequestErrorListener() {
+                    @Override
+                    public void onRequestError(RequestError error) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        ).execute();
+    }
+
+
+    private void sortUserListDesc(Map<String, String> originalUserList) {
+        List<String> usernames = new ArrayList<>();
+        usernames.addAll(originalUserList.keySet());
+        Collections.sort(usernames, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                int minLength = Math.min(s1.length(), s2.length());
+                for (int i = 0; i < minLength; i += 1) {
+                    if (s1.charAt(i) != s2.charAt(i)) {
+                        return (s2.charAt(i) - s1.charAt(i));
+                    }
+                }
+                return (s2.length() - s1.length());
+            }
+        });
+
+        timelineUserList.clear();
+        for (String username : usernames) {
+            timelineUserList.put(username, originalUserList.get(username));
+        }
+    }
+
+
+    @Override
+    public void executeRequest(Request request) {
+        request.setTag(TAG_REQUESTS);
+        requestQueue.add(request);
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        requestQueue.cancelAll(TAG_REQUESTS);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACTION_USER_AUTH) {
             if (resultCode == RESULT_OK) {
                 loadAuthorizedAccount();
+                fetchHomeTimeline();
             } else if (resultCode == RESULT_CANCELED) {
                 finish();
             }

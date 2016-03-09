@@ -20,19 +20,31 @@
                 app:roundAsCircle="true"/>
 
             <TextView
-                android:id="@+id/text_nick_name"
-                style="@style/TweetCard_Header_NickName"
-                android:layout_toEndOf="@id/image_avatar"
+                android:id="@+id/text_nickname"
+                style="@style/TweetCard_Header_Nickname"
                 tools:text="Title"/>
 
             <TextView
-                android:id="@+id/text_username"
-                style="@style/TweetCard_Header_Username"
-                android:layout_below="@id/text_nick_name"
-                android:layout_toEndOf="@id/image_avatar"
+                android:id="@+id/text_time"
+                style="@style/TweetCard_Header_Time"
+                android:layout_below="@id/text_nickname"
                 tools:text="Subhead"/>
 
         </RelativeLayout>
+
+        <!-- Content -->
+        <TextView
+            android:id="@+id/text_content"
+            style="@style/TweetCard_Content"
+            tools:text="Greyhound divisively hello coldly wonderfully marginally far upon excluding."/>
+
+        <!-- Source Tweet -->
+        <ViewStub
+            android:id="@+id/stub_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/view_source_tweet"
+            android:layout="@layout/stub_tweet_source"/>
 
         <!-- Image(s) -->
         <!-- TODO: Edit for multiple images. -->
@@ -43,37 +55,21 @@
             android:inflatedId="@+id/image_image"
             android:layout="@layout/stub_tweet_image"/>
 
-        <!-- Content -->
-        <TextView
-            android:id="@+id/text_content"
-            style="@style/TweetCard_Content"
-            tools:text="Greyhound divisively hello coldly wonderfully marginally far upon excluding."/>
-
         <!-- Actions -->
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_small">
+            style="@style/TweetCard_Actions">
 
-            <ImageButton
+            <Button
                 android:id="@+id/button_retweet"
                 style="@style/TweetCard_Actions_Button_Retweet"
-                android:contentDescription="@string/description.button.retweet"/>
+                android:contentDescription="@string/description.button.retweet"
+                tools:text="12"/>
 
-            <ImageButton
+            <Button
                 android:id="@+id/button_comment"
                 style="@style/TweetCard_Actions_Button_Comment"
-                android:contentDescription="@string/description.button.comment"/>
-
-            <ImageButton
-                android:id="@+id/button_favorite"
-                style="@style/TweetCard_Actions_Button_Favorite"
-                android:contentDescription="@string/description.button.favorite"/>
-
-            <ImageButton
-                android:id="@+id/button_menu"
-                style="@style/TweetCard_Actions_Button_Menu"
-                android:contentDescription="@string/description.button.menu"/>
+                android:contentDescription="@string/description.button.comment"
+                tools:text="10"/>
 
         </RelativeLayout>
 

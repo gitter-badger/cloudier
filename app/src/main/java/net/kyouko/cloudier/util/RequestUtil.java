@@ -10,6 +10,7 @@ import net.kyouko.cloudier.api.RequestError;
 import net.kyouko.cloudier.application.Config;
 import net.kyouko.cloudier.model.Account;
 import net.kyouko.cloudier.model.BaseTweet;
+import net.kyouko.cloudier.model.SourceTweet;
 import net.kyouko.cloudier.model.Timeline;
 import net.kyouko.cloudier.model.Tweet;
 import net.kyouko.cloudier.model.User;
@@ -157,12 +158,19 @@ public class RequestUtil {
         tweet.timestamp = tweetObject.getLong("timestamp");
         tweet.likedCount = tweetObject.getInt("likecount");
         tweet.commentedCount = tweetObject.getInt("mcount");
+        tweet.content = tweetObject.getString("text");
         tweet.originalContent = tweetObject.getString("origtext");
         tweet.sentBySelf = (tweetObject.getInt("self") == 1);
         tweet.status = tweetObject.getInt("status");
         tweet.type = tweetObject.getInt("type");
 
-        if (tweetObject.has("image")) {
+        if (tweetObject.has("source") && !tweetObject.isNull("source")) {
+            JSONObject sourceTweetObject = tweetObject.getJSONObject("source");
+            tweet.sourceTweet = parseSourceTweetFromJson(sourceTweetObject);
+            tweet.hasSourceTweet = true;
+        }
+
+        if (tweetObject.has("image") && !tweetObject.isNull("image")) {
             JSONArray images = tweetObject.getJSONArray("image");
             if (images != null) {
                 for (int i = 0; i < images.length(); i += 1) {
@@ -171,20 +179,55 @@ public class RequestUtil {
             }
         }
 
-        if (tweetObject.has("user")) {
+        if (tweetObject.has("user") && !tweetObject.isNull("user")) {
             JSONObject users = tweetObject.getJSONObject("user");
-            if (users != null) {
-                Iterator<String> keyIterator = users.keys();
-                while (keyIterator.hasNext()) {
-                    String username = keyIterator.next();
-                    String nickname = users.getString(username);
+            Iterator<String> keyIterator = users.keys();
+            while (keyIterator.hasNext()) {
+                String username = keyIterator.next();
+                String nickname = users.getString(username);
 
-                    tweet.userList.put(username, nickname);
-                }
+                tweet.userList.put(username, nickname);
             }
         }
 
         return tweet;
+    }
+
+
+    /**
+     * Parses a {@link JSONObject]} into a {@link SourceTweet}.
+     *
+     * @param sourceTweetObject a {@link JSONObject} representing a source tweet
+     * @return a {@link SourceTweet} object
+     * @throws JSONException if JSON is invalid
+     */
+    public static SourceTweet parseSourceTweetFromJson(JSONObject sourceTweetObject) throws JSONException {
+        SourceTweet sourceTweet = new SourceTweet();
+
+        sourceTweet.user = parseTweetUserFromJson(sourceTweetObject);
+        sourceTweet.retweetedCount = sourceTweetObject.getInt("count");
+        sourceTweet.from = sourceTweetObject.getString("from");
+        sourceTweet.fromUrl = sourceTweetObject.getString("fromurl");
+        sourceTweet.id = Long.parseLong(sourceTweetObject.getString("id"));
+        sourceTweet.timestamp = sourceTweetObject.getLong("timestamp");
+        sourceTweet.likedCount = sourceTweetObject.getInt("likecount");
+        sourceTweet.commentedCount = sourceTweetObject.getInt("mcount");
+        sourceTweet.content = sourceTweetObject.getString("text");
+        sourceTweet.originalContent = sourceTweetObject.getString("origtext");
+        sourceTweet.sentBySelf = (sourceTweetObject.getInt("self") == 1);
+        sourceTweet.status = sourceTweetObject.getInt("status");
+        sourceTweet.type = sourceTweetObject.getInt("type");
+
+        if (sourceTweetObject.has("image") && !sourceTweetObject.isNull("image")) {
+            JSONArray images = sourceTweetObject.getJSONArray("image");
+            if (images != null) {
+                for (int i = 0; i < images.length(); i += 1) {
+                    sourceTweet.images.add(images.getString(i));
+                }
+            }
+        }
+
+        return sourceTweet;
     }
 
 

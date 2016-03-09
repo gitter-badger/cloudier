@@ -11,4 +11,26 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <!-- Load More Button -->
+    <style name="LoadMoreButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/spacing_xlarge</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="LoadMoreButton_Wrapper">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/spacing_small</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="LoadMoreButton_Text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
+    </style>
+
 </resources>

@@ -3,6 +3,13 @@
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="black_87alpha">#DE000000</color>
+    <color name="black_54alpha">#8A000000</color>
+    <color name="black_38alpha">#61000000</color>
+
+    <color name="grey_50">#FAFAFA</color>
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_200">#EEEEEE</color>
 
     <color name="light_blue_500">#03A9F4</color>
     <color name="light_blue_700">#0288D1</color>

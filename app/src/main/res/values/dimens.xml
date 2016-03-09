@@ -2,11 +2,13 @@
 <resources>
 
     <!-- Spacings -->
-    <dimen name="spacing_tiny">4dp</dimen>
+    <dimen name="spacing_xxsmall">2dp</dimen>
+    <dimen name="spacing_xsmall">4dp</dimen>
     <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_normal">16dp</dimen>
     <dimen name="spacing_large">32dp</dimen>
     <dimen name="spacing_xlarge">48dp</dimen>
+    <dimen name="spacing_xxlarge">56dp</dimen>
     <dimen name="spacing_huge">72dp</dimen>
 
     <!-- Elevations -->
@@ -14,13 +16,23 @@
     <dimen name="elevation_fab_normal">6dp</dimen>
     <dimen name="elevation_fab_pressed">12dp</dimen>
 
+    <!-- Text Sizes -->
+    <dimen name="text_size_material_title">20sp</dimen>
+    <dimen name="text_size_material_subheading">16sp</dimen>
+    <dimen name="text_size_material_body1">15sp</dimen>
+    <dimen name="text_size_material_body2">15sp</dimen>
+    <dimen name="text_size_material_caption">12sp</dimen>
+    <dimen name="text_size_material_button">14sp</dimen>
+    <dimen name="text_size_material_headline">24sp</dimen>
+    <dimen name="text_size_material_display1">34sp</dimen>
+    <dimen name="text_size_material_display2">45sp</dimen>
+    <dimen name="text_size_material_display3">56sp</dimen>
+    <dimen name="text_size_material_display4">112sp</dimen>
+
     <!-- Others -->
     <dimen name="button_height_default">36dp</dimen>
-    <dimen name="avatar_size_normal">36dp</dimen>
+    <dimen name="avatar_size_normal">40dp</dimen>
     <dimen name="radius_card">2dp</dimen>
     <dimen name="message_card_title_height">180dp</dimen>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
 
 </resources>

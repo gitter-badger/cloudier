@@ -10,7 +10,8 @@ import java.util.Map;
  */
 public class Tweet extends BaseTweet {
 
-    public SourceTweet sourceTweet;
+    public boolean hasSourceTweet = false;
+    public SourceTweet sourceTweet = null;
     public Map<String, String> userList = new HashMap<>();
 
 }
