@@ -160,14 +160,18 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
         SpannableStringBuilder builder = new SpannableStringBuilder(originalContent);
 
         for (LinkedHashMap.Entry<String, String> entry : userList.entrySet()) {
-            // content = content.replaceAll("@" + entry.getKey(), entry.getValue());
-            int start = builder.toString().indexOf("@" + entry.getKey());
-            if (start >= 0) {
+            int lastPosition = 0;
+            int start = builder.toString().indexOf("@" + entry.getKey(), lastPosition);
+            while (start >= 0) {
                 int end = start + entry.getKey().length() + 1;
                 builder.replace(start, end, entry.getValue());
+
                 int spanStart = start;
                 int spanEnd = spanStart + entry.getValue().length();
                 builder.setSpan(new StyleSpan(Typeface.BOLD), spanStart, spanEnd, 0);
+
+                lastPosition = spanEnd;
+                start = builder.toString().indexOf("@" + entry.getKey(), lastPosition);
             }
         }
 
