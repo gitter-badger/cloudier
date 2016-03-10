@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity
                         swipeRefreshLayout.setRefreshing(false);
 
                         Snackbar.make(coordinatorLayout,
-                                getString(R.string.text_info_error),
+                                getString(R.string.text_info_error, error.getLocalizedMessage()),
                                 Snackbar.LENGTH_SHORT).show();
                     }
                 }
@@ -215,47 +215,51 @@ public class MainActivity extends AppCompatActivity
 
 
     private void fetchLatestHomeTimeline() {
-        new HomeTimelineRequest(this,
-                new RequestSuccessListener<Timeline>() {
-                    @Override
-                    public void onRequestSuccess(Timeline result) {
-                        swipeRefreshLayout.setRefreshing(false);
+        if (timeline.tweets.size() == 0) {
+            fetchHomeTimeline();
+        } else {
+            new HomeTimelineRequest(this,
+                    new RequestSuccessListener<Timeline>() {
+                        @Override
+                        public void onRequestSuccess(Timeline result) {
+                            swipeRefreshLayout.setRefreshing(false);
 
-                        if (result.tweets.get(0).id.equals(timeline.tweets.get(0).id)) {
-                            Snackbar.make(coordinatorLayout,
-                                    getString(R.string.text_info_no_new_tweet),
-                                    Snackbar.LENGTH_SHORT).show();
-                        } else if (!timeline.containsTweet(result.tweets.get(result.tweets.size() - 1))) {
-                            timeline = result;
-                        } else {
-                            for (int i = result.tweets.size() - 2; i >= 0; i -= 1) {
-                                if (!timeline.containsTweet(result.tweets.get(i))) {
-                                    timeline.tweets.add(0, result.tweets.get(i));
-                                    timeline.userList.putAll(result.userList);
+                            if (result.tweets.get(0).id.equals(timeline.tweets.get(0).id)) {
+                                Snackbar.make(coordinatorLayout,
+                                        getString(R.string.text_info_no_new_tweet),
+                                        Snackbar.LENGTH_SHORT).show();
+                            } else if (!timeline.containsTweet(result.tweets.get(result.tweets.size() - 1))) {
+                                timeline = result;
+                            } else {
+                                for (int i = result.tweets.size() - 2; i >= 0; i -= 1) {
+                                    if (!timeline.containsTweet(result.tweets.get(i))) {
+                                        timeline.tweets.add(0, result.tweets.get(i));
+                                        timeline.userList.putAll(result.userList);
+                                    }
                                 }
                             }
+
+                            timelineEntries.clear();
+                            timelineEntries.addAll(timeline.tweets);
+                            timelineEntries.add(new LoadMoreModel());
+
+                            sortUserListDesc(timeline.userList);
+
+                            adapter.notifyDataSetChanged();
                         }
+                    },
+                    new RequestErrorListener() {
+                        @Override
+                        public void onRequestError(RequestError error) {
+                            swipeRefreshLayout.setRefreshing(false);
 
-                        timelineEntries.clear();
-                        timelineEntries.addAll(timeline.tweets);
-                        timelineEntries.add(new LoadMoreModel());
-
-                        sortUserListDesc(timeline.userList);
-
-                        adapter.notifyDataSetChanged();
+                            Snackbar.make(coordinatorLayout,
+                                    getString(R.string.text_info_error, error.getLocalizedMessage()),
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
                     }
-                },
-                new RequestErrorListener() {
-                    @Override
-                    public void onRequestError(RequestError error) {
-                        swipeRefreshLayout.setRefreshing(false);
-
-                        Snackbar.make(coordinatorLayout,
-                                getString(R.string.text_info_error),
-                                Snackbar.LENGTH_SHORT).show();
-                    }
-                }
-        ).execute();
+            ).execute();
+        }
     }
 
 
@@ -282,7 +286,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onRequestError(RequestError error) {
                         Snackbar.make(coordinatorLayout,
-                                getString(R.string.text_info_error),
+                                getString(R.string.text_info_error, error.getLocalizedMessage()),
                                 Snackbar.LENGTH_SHORT).show();
                     }
                 }
