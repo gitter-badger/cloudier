@@ -49,6 +49,8 @@
 
     <string name="text.symbol.colon">:\u00A0</string>
 
+    <string name="text.pattern.original_tweet_content" formatted="false">\u00A0|| @%s: %s</string>
+
     <string name="description.button.retweet">Retweet</string>
     <string name="description.button.comment">Comment</string>
     <string name="description.button.send">Send</string>

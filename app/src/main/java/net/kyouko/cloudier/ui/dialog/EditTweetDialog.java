@@ -89,27 +89,6 @@ public class EditTweetDialog extends DialogFragment {
         String username = "@" + currentAccount.username;
         textUsername.setText(username);
 
-
-        // Source tweet
-        if (getArguments() != null) {
-            isRetweetOrComment = getArguments().getBoolean(ARG_IS_RETWEET_OR_COMMENT, false);
-            if (isRetweetOrComment) {
-                sourceTweet = (Tweet) getArguments().getSerializable(ARG_SOURCE_TWEET);
-
-                View viewSourceTweet = stubSourceTweet.inflate();
-                TextView textSourceTweetNickname = (TextView) viewSourceTweet.findViewById(R.id.text_source_nickname);
-                TextView textSourceTweetContent = (TextView) viewSourceTweet.findViewById(R.id.text_source_content);
-
-                String sourceTweetNickname = sourceTweet.user.nickName + getString(R.string.text_symbol_colon);
-                textSourceTweetNickname.setText(sourceTweetNickname);
-
-                textSourceTweetContent.setText(sourceTweet.originalContent); // TODO: replace original content with parsed content
-
-                buttonAddImage.setVisibility(View.GONE);
-            }
-        }
-
-
         editContent.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -134,6 +113,29 @@ public class EditTweetDialog extends DialogFragment {
         });
 
         textWordCount.setText(String.valueOf(wordCountAvailable));
+
+        // Source tweet
+        if (getArguments() != null) {
+            isRetweetOrComment = getArguments().getBoolean(ARG_IS_RETWEET_OR_COMMENT, false);
+            if (isRetweetOrComment) {
+                sourceTweet = (Tweet) getArguments().getSerializable(ARG_SOURCE_TWEET);
+
+                View viewSourceTweet = stubSourceTweet.inflate();
+                TextView textSourceTweetNickname = (TextView) viewSourceTweet.findViewById(R.id.text_source_nickname);
+                TextView textSourceTweetContent = (TextView) viewSourceTweet.findViewById(R.id.text_source_content);
+
+                String sourceTweetNickname = sourceTweet.user.nickName + getString(R.string.text_symbol_colon);
+                textSourceTweetNickname.setText(sourceTweetNickname);
+
+                textSourceTweetContent.setText(sourceTweet.originalContent); // TODO: replace original content with parsed content
+
+                if (sourceTweet.type == Tweet.TYPE_RETWEET || sourceTweet.type == Tweet.TYPE_COMMENT || sourceTweet.type == Tweet.TYPE_REPLY) {
+                    editContent.setText(getString(R.string.text_pattern_original_tweet_content, sourceTweet.user.username, sourceTweet.originalContent));
+                }
+
+                buttonAddImage.setVisibility(View.GONE);
+            }
+        }
 
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
