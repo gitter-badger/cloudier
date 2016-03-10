@@ -220,7 +220,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
             holder.textContent.setVisibility(View.VISIBLE);
             holder.textContent.setText(
                     replaceUsernameWithNicknameInContent(
-                            TextUtil.addLinkToUrlsInText(context, tweet.originalContent, false)
+                            TextUtil.addLinkToTopicsInText(context,
+                                    TextUtil.addLinkToUrlsInText(context, tweet.originalContent, false),
+                                    false)
                     )
             );
             holder.textContent.setMovementMethod(new LinkMovementMethod());
@@ -271,7 +273,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.BaseVi
             textSourceTweetContent.setVisibility(View.VISIBLE);
             textSourceTweetContent.setText(replaceUsernameWithNicknameInContent(
                     replaceUsernameWithNicknameInContent(
-                            TextUtil.addLinkToUrlsInText(context, sourceTweet.originalContent, false)
+                            TextUtil.addLinkToTopicsInText(context,
+                                    TextUtil.addLinkToUrlsInText(context, sourceTweet.originalContent, false),
+                                    false)
                     )
             ));
             textSourceTweetContent.setMovementMethod(new LinkMovementMethod());

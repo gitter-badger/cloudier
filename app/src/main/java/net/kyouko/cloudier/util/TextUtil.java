@@ -23,11 +23,16 @@ public class TextUtil {
 
     public static SpannableStringBuilder addLinkToUrlsInText(final Context context, String text, final boolean clickable) {
         SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        return addLinkToUrlsInText(context, builder, clickable);
+    }
+
+
+    public static SpannableStringBuilder addLinkToUrlsInText(final Context context, SpannableStringBuilder builder, final boolean clickable) {
         String regexUrl = "(https?://)?([\\da-z-]+.)+\\.([a-z\\.]{2,6})([/\\w\\.-]*)*/?";
 
-        Matcher urlMatcher = Pattern.compile(regexUrl).matcher(text);
+        Matcher urlMatcher = Pattern.compile(regexUrl).matcher(builder.toString());
         while (urlMatcher.find()) {
-            final String url = text.substring(urlMatcher.start(), urlMatcher.end());
+            final String url = builder.toString().substring(urlMatcher.start(), urlMatcher.end());
 
             ClickableWithoutUnderlineSpan linkSpan = new ClickableWithoutUnderlineSpan() {
                 @Override
@@ -39,6 +44,41 @@ public class TextUtil {
             };
 
             builder.setSpan(linkSpan, urlMatcher.start(), urlMatcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return builder;
+    }
+
+
+    public static SpannableStringBuilder addLinkToTopicsInText(final Context context, String text, final boolean clickable) {
+        SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        return addLinkToTopicsInText(context, builder, clickable);
+    }
+
+
+    public static SpannableStringBuilder addLinkToTopicsInText(final Context context, SpannableStringBuilder builder, final boolean clickable) {
+        int topicStart = -1, topicEnd;
+        for (int i = 0; i < builder.length(); i += 1) {
+            if (builder.charAt(i) == '#') {
+                if (topicStart < 0) {
+                    topicStart = i;
+                } else {
+                    topicEnd = i + 1;
+
+                    ClickableWithoutUnderlineSpan linkSpan = new ClickableWithoutUnderlineSpan() {
+                        @Override
+                        public void onClick(View widget) {
+                            if (clickable) {
+                                // TODO: view topic
+                            }
+                        }
+                    };
+
+                    builder.setSpan(linkSpan, topicStart, topicEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    topicStart = -1;
+                }
+            }
         }
 
         return builder;
