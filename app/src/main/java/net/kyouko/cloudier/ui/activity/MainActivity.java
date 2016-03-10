@@ -108,6 +108,12 @@ public class MainActivity extends AppCompatActivity
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.scrollToPosition(0 );
+            }
+        });
     }
 
 
